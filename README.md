@@ -1,50 +1,108 @@
-# React + TypeScript + Vite
+# Bike Rental Service Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
 
-Currently, two official plugins are available:
+This project is a fully functional Bike Rental Service platform that allows users to browse, rent, and manage bike bookings. The application includes both user and admin functionalities, with features such as bike management, booking, rentals, and an interactive user experience. It is fully responsive and integrates with a backend API for handling data.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+### Features
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+#### Public Pages
 
-- Configure the top-level `parserOptions` property like this:
+- **Navbar & Footer:**
+  - Integrated with dynamic user role-based navigation.
+  - Social media icons and website links for privacy policy, terms of service, and contact.
+- **Home Page:**
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+  - Hero section with a banner and search bar for bike availability.
+  - Featured section to display available bikes with their brand and a "View Detail" button.
+  - Testimonials, Why Choose Us, Coupons & Discounts sections.
+  - Contact Us section with a functional form.
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+- **About Us Page:**
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+  - Mission statement, team section, history, and contact information.
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+- **User Authentication:**
+  - Users can sign up, log in, and log out.
+  - Form validation ensures accurate input.
+
+#### User Dashboard (Protected Routes)
+
+- **User Profile Management:**
+
+  - Users can view and update their profiles with name, email, phone, and address.
+
+- **Bike Management:**
+
+  - Bike listing with filtering by brand, model, and availability.
+  - Bike detail page with full information and a "Book Now" button.
+
+- **Rental Management:**
+  - Booking process allows users to rent bikes with a payment system.
+  - My Rentals page with tabs for Paid and Unpaid rentals. Users can pay for rentals and see the status.
+
+#### Admin Pages (Protected Routes)
+
+- **Admin Profile Management:** Same as user profile management.
+
+- **Bike Management:**
+
+  - Admins can create, edit, and delete bikes.
+  - Integrated filter system for easier bike management.
+
+- **User Management:**
+
+  - Admins can promote users to admin roles and delete users.
+
+- **Return Bike:**
+  - Admins can process bike returns, update rental statuses, and calculate final costs.
+
+#### Additional Features
+
+- **Coupon Management (Bonus):**
+
+  - Admins can create and manage coupon codes for discounts.
+  - Integrated coupon system on the user side with a spin-the-wheel gamified feature for discounts.
+
+- **Error Handling:**
+
+  - Comprehensive error and validation handling, including custom 404 pages.
+
+- **Responsiveness:**
+  - The website is fully responsive, ensuring compatibility with mobile, tablet, and desktop devices.
+
+---
+
+### Bonus Features
+
+- **Coupon Functionality:**
+
+  - A gamified "spin-the-wheel" feature for winning discounts.
+  - Users can apply discount codes during checkout.
+
+- **Dark Mode:**
+  - Toggle between light and dark mode using a theme switcher.
+
+---
+
+### Technologies Used
+
+- **Frontend:**
+
+  - React.js with Tailwind CSS for styling.
+  - Redux for state management.
+
+- **Backend:**
+  - Node.js with Express.js.
+  - MongoDB for the database.
+
+---
+
+### How to Run
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/bike-rental-service.git
+   ```
