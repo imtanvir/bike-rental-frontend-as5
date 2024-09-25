@@ -1,11 +1,16 @@
 import Profile from "@/components/Profile";
+import ProtectedRoute from "@/layout/ProtectedRoute";
 import UserProfileDashboard from "@/pages/UserDashboard";
 
 export const adminPath = [
   {
     name: "Dashboard",
     path: "dashboard",
-    element: <UserProfileDashboard />,
+    element: (
+      <ProtectedRoute>
+        <UserProfileDashboard />
+      </ProtectedRoute>
+    ),
     children: [
       {
         name: "User Profile",

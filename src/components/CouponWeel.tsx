@@ -35,6 +35,7 @@ const CouponWheel = () => {
         ((360 - normalizedRotation) / 360) * options.length
       );
       setSelectedOption(options[selectedIndex].value);
+      setIsLoading(false);
     }, spinDuration); // Match this with the CSS transition time
   };
 
@@ -45,6 +46,7 @@ const CouponWheel = () => {
     }
   }, [rotation]);
 
+  const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
 
   const handleCopy = (data: string) => {
@@ -56,7 +58,7 @@ const CouponWheel = () => {
 
   return (
     <section className=" bg-indigo-100 dark:bg-gradient-to-b dark:from-background dark:to-muted">
-      <div className=" flex md:flex-row flex-col gap-4 items-center md:py-32 py-16 container mx-auto">
+      <div className=" flex lg:flex-row flex-col gap-4 items-center md:py-32 py-16 container mx-auto">
         <div>
           <h1 className="text-center md:text-6xl text-4xl bebas-neue-regular">
             Experience Your Next Ride with an Exclusive{" "}
@@ -65,7 +67,7 @@ const CouponWheel = () => {
             <span className="text-indigo-500">Coupon</span>!
           </h1>
         </div>
-        <div className="container mx-auto flex md:flex-row flex-col justify-end gap-5 items-center poppins-regular">
+        <div className="container mx-auto flex md:flex-row flex-col justify-end gap-5 md:items-end items-center poppins-regular">
           <div className="relative w-64 h-64 mb-8">
             <div className="relative w-full h-full z-20">
               <img
@@ -111,66 +113,104 @@ const CouponWheel = () => {
               <div className="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[20px] border-b-yellow-400" />
             </div>
           </div>
-          <div>
+          <div className="flex flex-col">
             <Button
-              onClick={spinWheel}
+              onClick={() => {
+                spinWheel();
+                setIsLoading(!isLoading);
+              }}
               disabled={isSpinning}
               className="bg-gradient-to-r from-violet-500 to-fuchsia-500 animate-pulse animate-infinite animate-ease-linear hover:animate-none"
             >
               {isSpinning ? "Spinning..." : "Spin the Wheel"}
             </Button>
 
-            <div className={`${selectedOption ? "visible" : "invisible"}`}>
-              <p className="pb-2 pt-4 text-lg font-semibold" aria-live="polite">
-                Your coupon is:{" "}
-                <span className="text-indigo-500">{selectedOption}</span>
-              </p>
-              <div className="relative inline-flex items-center">
+            {!isLoading ? (
+              <div className={`${selectedOption ? "visible" : "invisible"}`}>
+                <p
+                  className="pb-2 pt-4 text-lg font-semibold"
+                  aria-live="polite"
+                >
+                  Your coupon is:{" "}
+                  <span className="text-indigo-500">{selectedOption}</span>
+                </p>
+                <div className="relative inline-flex items-center">
+                  <input
+                    type="text"
+                    value={selectedOption || ""}
+                    readOnly
+                    className="bg-gray-50 border border-gray-300 text-gray-500 text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400"
+                  />
+                  <button
+                    onClick={() => handleCopy(selectedOption || "")}
+                    className="ml-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg p-2 inline-flex items-center"
+                  >
+                    {copied ? (
+                      <svg
+                        className="w-4 h-4 text-blue-600 dark:text-blue-400"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 16 12"
+                      >
+                        <path
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M1 5.917 5.724 10.5 15 1.5"
+                        />
+                      </svg>
+                    ) : (
+                      <svg
+                        className="w-4 h-4"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 18 20"
+                      >
+                        <path d="M16 1h-3.278A1.992 1.992 0 0 0 11 0H7a1.993 1.993 0 0 0-1.722 1H2a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2Zm-3 14H5a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2Zm0-4H5a1 1 0 0 1 0-2h8a1 1 0 1 1 0 2Zm0-5H5a1 1 0 0 1 0-2h2V2h4v2h2a1 1 0 1 1 0 2Z" />
+                      </svg>
+                    )}
+                  </button>
+                  {copied && (
+                    <div className="absolute bottom-[-1.5rem] left-0 bg-gray-900 text-white text-xs rounded-lg p-1 shadow-lg">
+                      Copied!
+                    </div>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div className="py-2">
+                <p className="bg-clip-text text-transparent bg-gradient-to-tr from-violet-700 to-pink-600 text-left">
+                  Loading Coupon...
+                </p>
                 <input
                   type="text"
-                  value={selectedOption || ""}
+                  value={""}
                   readOnly
-                  className="bg-gray-50 border border-gray-300 text-gray-500 text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400"
+                  disabled={true}
+                  className=" border  text-sm rounded-lg p-2.5 invisible"
                 />
-                <button
-                  onClick={() => handleCopy(selectedOption || "")}
-                  className="ml-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg p-2 inline-flex items-center"
-                >
-                  {copied ? (
-                    <svg
-                      className="w-4 h-4 text-blue-600 dark:text-blue-400"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 16 12"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M1 5.917 5.724 10.5 15 1.5"
-                      />
-                    </svg>
-                  ) : (
-                    <svg
-                      className="w-4 h-4"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="currentColor"
-                      viewBox="0 0 18 20"
-                    >
-                      <path d="M16 1h-3.278A1.992 1.992 0 0 0 11 0H7a1.993 1.993 0 0 0-1.722 1H2a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2Zm-3 14H5a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2Zm0-4H5a1 1 0 0 1 0-2h8a1 1 0 1 1 0 2Zm0-5H5a1 1 0 0 1 0-2h2V2h4v2h2a1 1 0 1 1 0 2Z" />
-                    </svg>
-                  )}
+                <button className="ml-2     rounded-lg p-2 inline-flex items-center invisible">
+                  <svg
+                    className="w-4 h-4 text-blue-600 dark:text-blue-400"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 16 12"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M1 5.917 5.724 10.5 15 1.5"
+                    />
+                  </svg>
                 </button>
-                {copied && (
-                  <div className="absolute bottom-[-1.5rem] left-0 bg-gray-900 text-white text-xs rounded-lg p-1 shadow-lg">
-                    Copied!
-                  </div>
-                )}
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

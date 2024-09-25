@@ -1,4 +1,3 @@
-import ProtectedRoute from "@/layout/ProtectedRoute";
 import AboutUs from "@/pages/AboutUs";
 import AllBikes from "@/pages/AllBikes";
 import BikeDetails from "@/pages/BikeDetails";
@@ -12,7 +11,6 @@ import App from "./../App";
 import _404 from "./../pages/_404";
 import { adminPath } from "./admin.route";
 import { userPath } from "./user.route";
-console.log(routeGenerator(userPath));
 const router = createBrowserRouter([
   {
     path: "/",
@@ -23,12 +21,12 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
+        path: "/bike-details/:id",
+        element: <BikeDetails />,
+      },
+      {
         path: "/all-product",
-        element: (
-          <ProtectedRoute>
-            <AllBikes />
-          </ProtectedRoute>
-        ),
+        element: <AllBikes />,
       },
       {
         path: "/about-us",
@@ -61,10 +59,6 @@ const router = createBrowserRouter([
     path: "/user",
     element: <App />,
     children: routeGenerator(userPath),
-  },
-  {
-    path: "/bike-details/:id",
-    element: <BikeDetails />,
   },
 ]);
 

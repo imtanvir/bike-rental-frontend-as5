@@ -15,7 +15,7 @@ const Checkout = ({ id }: { id: string }) => {
   const [err, setErr] = useState("");
   const startTime = useAppSelector(useStartTime);
   const [rentABike] = useRentABikeMutation(undefined);
-  const [makePayment] = useMakeAdvancePaymentMutation();
+  const [makePayment] = useMakeAdvancePaymentMutation(undefined);
   const [clientSecret, setClientSecret] = useState("");
   const [transactionId, setTransactionId] = useState("");
   const [processing, setProcessing] = useState(false);
@@ -28,7 +28,7 @@ const Checkout = ({ id }: { id: string }) => {
       const response = await makePayment({
         amount: 100,
       });
-
+      console.log({ responseCO: response });
       setClientSecret(response.data.data.clientSecret);
     };
 
@@ -94,7 +94,7 @@ const Checkout = ({ id }: { id: string }) => {
             className: "bg-green-500 text-white border-green-400",
           });
           setTimeout(() => {
-            navigate("/dashboard/rentals");
+            navigate(`/${user?.role}/dashboard/rentals`);
           }, 2000);
         }
       }

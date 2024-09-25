@@ -14,10 +14,12 @@ import { Menu } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { userCurrentToken } from "./../redux/features/auth/authSlice";
 import Logo from "/src/assets/images/logo/Logo.svg";
+
 const Navbar = () => {
   const navigate = useNavigate();
   const user = useAppSelector(currentUser);
-  console.log((user as TUser)?.role);
+  const roleInNavBar = (user as TUser)?.role;
+  console.log({ roleInNavBar });
   const navbarStyle: React.CSSProperties = {
     overflow: "hidden",
     position: "sticky",
@@ -33,6 +35,7 @@ const Navbar = () => {
     dispatch(logOut());
     navigate("/login");
   };
+  console.log({ token });
   return (
     <>
       <nav
@@ -45,8 +48,8 @@ const Navbar = () => {
               className=" text-center flex items-end md:gap-2 gap-1 select-none"
               to={"/"}
             >
-              <img src={Logo} alt="logo" />
-              <h3 className="md:text-3xl text-2xl font-light select-none">
+              <img className="h-8 w-auto md:h-10" src={Logo} alt="logo" />
+              <h3 className="lg:text-xl text-xl font-light select-none word">
                 RidePro
               </h3>
             </Link>

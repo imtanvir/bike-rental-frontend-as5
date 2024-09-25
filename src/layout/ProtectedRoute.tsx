@@ -1,3 +1,4 @@
+import Spinner from "@/components/Spinner";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import {
   logOut,
@@ -6,18 +7,18 @@ import {
 } from "@/redux/features/auth/authSlice";
 import { TUser } from "@/redux/features/profile/profileSlice";
 import { jwtDecode } from "jwt-decode";
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 
 const ProtectedRoute = ({ children }: { children: ReactNode }) => {
   const token = useAppSelector(userCurrentToken);
   const dispatch = useAppDispatch();
-
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const refreshAccessToken = async () => {
       try {
         const response = await fetch(
-          "http://localhost:5000/api/auth/refresh-token",
+          `${import.meta.env.VITE_BASE_URL}/api/auth/refresh-token`,
           {
             method: "POST",
             credentials: "include", // Include cookies
@@ -33,10 +34,12 @@ const ProtectedRoute = ({ children }: { children: ReactNode }) => {
           // If refresh token is invalid, log out
           dispatch(logOut());
         }
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
+        console.log({ errorPR: error });
         dispatch(logOut());
       }
+
+      setLoading(false);
     };
 
     if (token) {
@@ -46,15 +49,23 @@ const ProtectedRoute = ({ children }: { children: ReactNode }) => {
       // If token expired, try refreshing the access token
       if ((decoded.exp as number) < currentTime) {
         refreshAccessToken();
+      } else {
+        setLoading(false);
       }
+    } else {
+      setLoading(false);
     }
   }, [token, dispatch]);
+
+  if (loading) {
+    return <Spinner />;
+  }
 
   if (!token) {
     return <Navigate to={"/login"} replace={true} />;
   }
 
-  return children;
+  return <>{children}</>;
 };
 
 export default ProtectedRoute;

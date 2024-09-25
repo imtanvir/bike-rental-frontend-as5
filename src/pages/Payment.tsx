@@ -1,4 +1,6 @@
 import Checkout from "@/components/Checkout";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetSingleBikeMutation } from "@/redux/features/bike/bikeApi";
 import { Elements } from "@stripe/react-stripe-js";
@@ -6,9 +8,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-const stripePromise = loadStripe(
-  "pk_test_51Q0O2z04fRK1pij2oyte1eoqFxEZI4vO6TlYig6eHpxxsOGJUNw4GpFGswfTKXXmqtChHtWT7Z4PuO5bQal1Qo7p00agTDkhhB"
-);
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 const Payment = () => {
   const { id } = useParams();
@@ -19,7 +19,7 @@ const Payment = () => {
     };
 
     res();
-  }, []);
+  }, [bikeData, id]);
 
   return (
     <>
@@ -56,6 +56,17 @@ const Payment = () => {
                       ${bike?.data?.pricePerHour}/hr
                     </span>
                   </h3>
+                  <form>
+                    <div className="flex gap-2 flex-row">
+                      <Input
+                        type="text"
+                        className="w-[70%]"
+                        name="coupon"
+                        value={bike?.data?._id}
+                      />
+                      <Button className="w-[30%]">Apply</Button>
+                    </div>
+                  </form>
                 </div>
               </div>
             ) : (

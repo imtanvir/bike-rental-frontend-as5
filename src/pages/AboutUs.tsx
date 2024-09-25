@@ -47,16 +47,19 @@ const AboutUs = () => {
     <div className="bg-gradient-to-b from-green-50 to-blue-50 dark:from-background dark:to-muted">
       <header className="py-20">
         <div className="container mx-auto px-4 text-left">
-          <h1 className="md:text-6xl text-4xl mb-4 bebas-neue-regular">
-            About RidePro
-          </h1>
+          <div className=" flex gap-2">
+            <h1 className="md:text-6xl text-4xl mb-4 bebas-neue-regular">
+              About
+            </h1>
+            <h1 className="font-light md:text-5xl text-3xl">RidePro</h1>
+          </div>
           <p className="text-xl max-w-2xl poppins-regular">
             Pedaling towards a greener future, one ride at a time.
           </p>
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-16 space-y-20 poppins-regular">
+      <main className="container mx-auto px-4 md:py-16 py-8 space-y-20 poppins-regular">
         <section className="text-center">
           <h2 className="text-3xl font-bold mb-6 flex items-center justify-center">
             <Bike className="mr-2 h-8 w-8 text-primary" />

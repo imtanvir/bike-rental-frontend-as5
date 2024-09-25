@@ -5,6 +5,7 @@ const bikeApi = baseApi.injectEndpoints({
       query: () => ({
         url: "/bikes/",
         method: "GET",
+        credentials: "include",
       }),
     }),
 
@@ -12,6 +13,7 @@ const bikeApi = baseApi.injectEndpoints({
       query: (id) => ({
         url: `/bikes/${id}`,
         method: "GET",
+        credentials: "include",
       }),
     }),
   }),

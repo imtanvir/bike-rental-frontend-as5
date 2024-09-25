@@ -8,7 +8,6 @@ import RentalCard from "./RentalCard";
 
 const MyRentals = () => {
   const { data, refetch } = useGetRentalsQuery(undefined);
-
   useEffect(() => {
     refetch();
   }, [refetch]);

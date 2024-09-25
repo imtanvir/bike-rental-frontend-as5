@@ -5,6 +5,7 @@ import { useGetAllBikesQuery } from "@/redux/features/bike/bikeApi";
 import { TBike } from "@/types/intex";
 import { Search } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import pimg from "../assets/images/banner.png";
 // Note: These components would need to be created or imported from a UI library compatible with React
 
@@ -196,10 +197,11 @@ const AllBikes = () => {
                     <p>Brand: {bike.brand}</p>
                     <p>Model: {bike.model}</p>
                     <p>Rate: ${bike.pricePerHour}/hr</p>
-
-                    <Button className="w-full mt-4 bg-indigo-800 hover:bg-indigo-600 hover:text-slate-200 text-slate-300">
-                      View Details
-                    </Button>
+                    <Link to={`/bike-details/${bike._id}`}>
+                      <Button className="w-full mt-4 bg-indigo-800 hover:bg-indigo-600 hover:text-slate-200 text-slate-300">
+                        View Details
+                      </Button>
+                    </Link>
                   </div>
                 </Card>
               ))}

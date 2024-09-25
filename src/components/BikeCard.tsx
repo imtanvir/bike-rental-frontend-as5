@@ -41,12 +41,14 @@ const BikeCard = ({
           <p className="text-sm text-gray-600 dark:text-gray-500">{model}</p>
         </CardContent>
         <CardFooter className="p-4 pt-0">
-          <Button
-            variant="outline"
-            className="bg-indigo-800 hover:bg-indigo-600 hover:text-slate-200 text-slate-300 dark:bg-slate-600 dark:text-slate-300 dark:hover:bg-slate-700 w-full"
-          >
-            <Link to={`/bike-details/${id}`}>View Details</Link>
-          </Button>
+          <Link to={`/bike-details/${id}`} className="w-full">
+            <Button
+              variant="outline"
+              className="bg-indigo-800 hover:bg-indigo-600 hover:text-slate-200 text-slate-300 dark:bg-indigo-600 dark:text-slate-200 dark:hover:bg-indigo-700 w-full"
+            >
+              View Details
+            </Button>
+          </Link>
         </CardFooter>
       </Card>
     </>

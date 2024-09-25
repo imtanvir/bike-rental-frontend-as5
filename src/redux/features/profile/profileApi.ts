@@ -14,7 +14,6 @@ const profileApi = baseApi.injectEndpoints({
         url: "/users/me",
         method: "PUT",
         body: data,
-        credentials: "include",
       }),
     }),
   }),

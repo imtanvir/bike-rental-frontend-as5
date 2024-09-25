@@ -11,6 +11,7 @@ import { Outlet } from "react-router-dom";
 
 export default function UserProfileDashboard() {
   const user = useAppSelector(currentUser);
+  // const { data } = useUserProfileQuery(undefined);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -18,6 +19,9 @@ export default function UserProfileDashboard() {
     // toggle sidebar
     setSidebarOpen(!sidebarOpen);
   };
+
+  // const role = user?.role as string;
+  // console.log({ data });
   return (
     <div className="flex h-screen relative dark:bg-gradient-to-b dark:from-background dark:to-muted bg-slate-50 bg-gradient-to-b from-green-50 to-blue-50">
       {/* Sidebar */}
@@ -58,37 +62,7 @@ export default function UserProfileDashboard() {
         </div>
         <Separator />
         <nav className="space-y-4">
-          {/* <NavItem icon={<UserIcon className="w-4 h-4" />}>
-            <Link
-              className="text-slate-300 hover:text-slate-400"
-              to={"/user/dashboard/"}
-            >
-              Profile
-            </Link>
-          </NavItem>
-          <NavItem icon={<SettingsIcon className="w-4 h-4" />}>
-            <Link
-              className="text-slate-300  hover:text-slate-400"
-              to={"/user/dashboard/rentals"}
-            >
-              My rental
-            </Link>
-          </NavItem>
-          <NavItem icon={<BellIcon className="w-4 h-4" />}>
-            <Link
-              className="text-slate-300  hover:text-slate-400"
-              to={"/user/dashboard/dashboard3"}
-            >
-              Notifications
-            </Link>
-          </NavItem>
-          <Button
-            className="bg-indigo-600 w-full text-white hover:bg-indigo-700 dark:text-slate-100 "
-            // onClick={handleLogout}
-          >
-            Logout
-          </Button> */}
-          <Sidebar role={(user as TUser).role as string} />
+          <Sidebar role={"user"} />
         </nav>
       </div>
       {/* Main Content */}

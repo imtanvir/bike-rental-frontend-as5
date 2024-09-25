@@ -2,28 +2,29 @@ import { RootState } from "@/redux/store";
 import { TBike } from "@/types/intex";
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState: { bikes: TBike[] } = {
-  bikes: [
-    {
-      _id: "",
-      image: "",
-      name: "",
-      description: "",
-      pricePerHour: "",
-      rating: 0,
-      totalRating: 0,
-      isAvailable: true,
-      cc: 0,
-      year: 0,
-      model: "",
-      brand: "",
-      weight: "",
-      frameSize: "",
-      tireSize: "",
-      gears: "",
-      features: [""],
-    },
-  ],
+const initialState: { bikes: TBike[] | null } = {
+  // bikes: [
+  //   // {
+  //   //   _id: "",
+  //   //   image: "",
+  //   //   name: "",
+  //   //   description: "",
+  //   //   pricePerHour: "",
+  //   //   rating: 0,
+  //   //   totalRating: 0,
+  //   //   isAvailable: true,
+  //   //   cc: 0,
+  //   //   year: 0,
+  //   //   model: "",
+  //   //   brand: "",
+  //   //   weight: "",
+  //   //   frameSize: "",
+  //   //   tireSize: "",
+  //   //   gears: "",
+  //   //   features: [""],
+  //   // },
+  // ],
+  bikes: null,
 };
 
 const bikeSlice = createSlice({
