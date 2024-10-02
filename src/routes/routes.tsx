@@ -1,3 +1,4 @@
+import ProtectedRoute from "@/layout/ProtectedRoute";
 import AboutUs from "@/pages/AboutUs";
 import AllBikes from "@/pages/AllBikes";
 import BikeDetails from "@/pages/BikeDetails";
@@ -25,7 +26,7 @@ const router = createBrowserRouter([
         element: <BikeDetails />,
       },
       {
-        path: "/all-product",
+        path: "/all-bike",
         element: <AllBikes />,
       },
       {
@@ -34,7 +35,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/payment/:id",
-        element: <Payment />,
+        element: (
+          <ProtectedRoute>
+            <Payment />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/signup",
@@ -52,6 +57,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/admin",
+    element: <App />,
+    children: routeGenerator(adminPath),
+  },
+  {
+    path: "/superAdmin",
     element: <App />,
     children: routeGenerator(adminPath),
   },

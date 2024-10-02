@@ -1,6 +1,7 @@
-import Spinner from "@/components/Spinner";
+import Loader from "@/components/Loader";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import {
+  currentUser,
   logOut,
   setUser,
   userCurrentToken,
@@ -8,12 +9,17 @@ import {
 import { TUser } from "@/redux/features/profile/profileSlice";
 import { jwtDecode } from "jwt-decode";
 import { ReactNode, useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 
 const ProtectedRoute = ({ children }: { children: ReactNode }) => {
   const token = useAppSelector(userCurrentToken);
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(true);
+  const userCurrent = useAppSelector(currentUser);
+  const location = useLocation();
+  const pathname = location.pathname;
+  const rolePathValue = pathname.split("/")[1];
+  console.log({ rolePathValue });
   useEffect(() => {
     const refreshAccessToken = async () => {
       try {
@@ -34,8 +40,7 @@ const ProtectedRoute = ({ children }: { children: ReactNode }) => {
           // If refresh token is invalid, log out
           dispatch(logOut());
         }
-      } catch (error) {
-        console.log({ errorPR: error });
+      } catch {
         dispatch(logOut());
       }
 
@@ -58,11 +63,22 @@ const ProtectedRoute = ({ children }: { children: ReactNode }) => {
   }, [token, dispatch]);
 
   if (loading) {
-    return <Spinner />;
+    return <Loader />;
   }
 
   if (!token) {
     return <Navigate to={"/login"} replace={true} />;
+  } else if (userCurrent?.role !== "user" && rolePathValue === "payment") {
+    console.log("from payment and user");
+    return <Navigate to={"*"} replace={true} />;
+  } else if (
+    userCurrent &&
+    userCurrent.role !== rolePathValue &&
+    rolePathValue !== "payment"
+  ) {
+    console.log("from not role holder");
+
+    return <Navigate to={"*"} replace={true} />;
   }
 
   return <>{children}</>;

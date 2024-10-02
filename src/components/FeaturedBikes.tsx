@@ -66,7 +66,7 @@ const FeaturedBikes = () => {
           </div>
           <div className="flex justify-center pt-6">
             <Link
-              to={"/"}
+              to={"/all-bike"}
               className={` ${!bikeData ? "hidden" : "flex items-center"}`}
             >
               <Button

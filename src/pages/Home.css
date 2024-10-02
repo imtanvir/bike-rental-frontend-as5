@@ -53,3 +53,30 @@
     font-weight: 400;
     font-style: normal;
 }
+
+/* Time picker indicator clock custom css  */
+
+.custom-time-input-dark::-webkit-calendar-picker-indicator {
+    background-color: #786ee9;
+    border-radius: 50%;
+    padding: 4px;
+    cursor: pointer;
+}
+
+.custom-time-input-light::-webkit-calendar-picker-indicator {
+    background-color: rgb(142, 182, 241);
+    border-radius: 50%;
+    padding: 4px;
+    cursor: pointer;
+}
+
+.custom-time-input::-webkit-calendar-picker-indicator {
+    border-radius: 50%;
+    padding: 4px;
+    cursor: pointer;
+}
+
+.custom-time-input-dark-tx::-webkit-datetime-edit {
+    color: white;
+    /* Set the text color */
+}

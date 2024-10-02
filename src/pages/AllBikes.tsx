@@ -7,7 +7,6 @@ import { Search } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import pimg from "../assets/images/banner.png";
-// Note: These components would need to be created or imported from a UI library compatible with React
 
 const bikes = [
   {
@@ -82,14 +81,6 @@ const AllBikes = () => {
     brand: "all",
     model: "all",
   });
-
-  // const filteredBikes = data?.data?.filter(
-  //   (bike) =>
-  //     bike.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-  //     (!filters.available || bike.available) &&
-  //     (filters.brand === "all" || bike.brand === filters.brand) &&
-  //     (filters.model === "all" || bike.model === filters.model)
-  // );
 
   const handleFilterChange = (
     event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>

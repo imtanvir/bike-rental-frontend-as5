@@ -18,8 +18,7 @@ import Logo from "/src/assets/images/logo/Logo.svg";
 const Navbar = () => {
   const navigate = useNavigate();
   const user = useAppSelector(currentUser);
-  const roleInNavBar = (user as TUser)?.role;
-  console.log({ roleInNavBar });
+  const role = user?.role as string;
   const navbarStyle: React.CSSProperties = {
     overflow: "hidden",
     position: "sticky",
@@ -35,7 +34,6 @@ const Navbar = () => {
     dispatch(logOut());
     navigate("/login");
   };
-  console.log({ token });
   return (
     <>
       <nav
@@ -59,11 +57,15 @@ const Navbar = () => {
             <li className="text-primary ">
               <Link to={"/"}>Home</Link>
             </li>
+            {["user", "superAdmin", "admin"].includes(role) && (
+              <li>
+                <Link to={`/${(user as TUser)?.role}/dashboard`}>
+                  Dashboard
+                </Link>
+              </li>
+            )}
             <li>
-              <Link to={`/${(user as TUser)?.role}/dashboard`}>Dashboard</Link>
-            </li>
-            <li>
-              <Link to={"/all-product"}>All Product</Link>
+              <Link to={"/all-bike"}>All Bike</Link>
             </li>
             <li>
               <Link to={"/about-us"}>About Us</Link>
@@ -91,7 +93,7 @@ const Navbar = () => {
           </ul>
 
           <div className="flex items-center">
-            <div className="flex md:hidden p-regular mr-2 items-center gap-2">
+            <div className="flex md:hidden p-regular mr-2 mt-6 items-center gap-2">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="icon">
@@ -103,11 +105,13 @@ const Navbar = () => {
                   <DropdownMenuItem>
                     <Link to={"/"}>Home</Link>
                   </DropdownMenuItem>
+                  {["user", "superAdmin", "admin"].includes(role) && (
+                    <DropdownMenuItem>
+                      <Link to={"/"}>Dashboard</Link>
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuItem>
-                    <Link to={"#features"}>Manage Product</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Link to={"#pricing"}>All Product</Link>
+                    <Link to={"/all-bike"}>All Bike</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <Link to={"/about-us"}>About Us</Link>

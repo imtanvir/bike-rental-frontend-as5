@@ -6,7 +6,7 @@ import { useAppSelector } from "@/hooks/hooks";
 import { currentUser } from "@/redux/features/auth/authSlice";
 import { TUser } from "@/redux/features/profile/profileSlice";
 import { useState } from "react";
-import { FaArrowRightArrowLeft } from "react-icons/fa6";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import { Outlet } from "react-router-dom";
 
 export default function UserProfileDashboard() {
@@ -20,16 +20,16 @@ export default function UserProfileDashboard() {
     setSidebarOpen(!sidebarOpen);
   };
 
-  // const role = user?.role as string;
+  const role = user?.role as string;
   // console.log({ data });
   return (
     <div className="flex h-screen relative dark:bg-gradient-to-b dark:from-background dark:to-muted bg-slate-50 bg-gradient-to-b from-green-50 to-blue-50">
       {/* Sidebar */}
       <Button
-        className="md:hidden absolute right-2 top-2"
+        className="md:hidden dark:bg-slate-500 absolute -left-4 top-2"
         onClick={handleToggleSidebar}
       >
-        <FaArrowRightArrowLeft />
+        <FaArrowRight className="dark:text-slate-300" />
       </Button>
       <div
         className={`bg-indigo-900 dark:bg-slate-900 md:w-64 p-6 space-y-6 md:relative absolute z-30 transition-transform duration-500 ease-in-out  shadow w-30% h-full transform ${
@@ -38,7 +38,13 @@ export default function UserProfileDashboard() {
             : "translate-x-[-100%] md:translate-x-0"
         }`}
       >
-        <div className="flex items-center space-x-2 ">
+        <div className="flex items-center relative space-x-2 ">
+          <Button
+            className="md:hidden absolute -right-5 -top-5 p-2 dark:bg-slate-500 w-7 h-7 rounded-full"
+            onClick={handleToggleSidebar}
+          >
+            <FaArrowLeft className="text-slate-300 text-2xl" />
+          </Button>
           <Avatar className="w-10 h-10">
             <AvatarImage
               src="/placeholder.svg?height=40&width=40"
@@ -62,7 +68,7 @@ export default function UserProfileDashboard() {
         </div>
         <Separator />
         <nav className="space-y-4">
-          <Sidebar role={"user"} />
+          <Sidebar role={role} />
         </nav>
       </div>
       {/* Main Content */}

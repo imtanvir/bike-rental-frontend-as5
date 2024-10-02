@@ -23,12 +23,12 @@ const Checkout = ({ id }: { id: string }) => {
   const paymentRef = useRef(0);
   const navigate = useNavigate();
 
+  console.log({ startTime });
   useEffect(() => {
     const advancePayment = async () => {
       const response = await makePayment({
         amount: 100,
       });
-      console.log({ responseCO: response });
       setClientSecret(response.data.data.clientSecret);
     };
 
@@ -142,10 +142,14 @@ const Checkout = ({ id }: { id: string }) => {
         <button
           type="submit"
           disabled={
-            !stripe || !clientSecret || processing || transactionId.length > 1
+            !startTime?.rentStartTime ||
+            !stripe ||
+            !clientSecret ||
+            processing ||
+            transactionId.length > 1
           }
           className={`button ${
-            !stripe || !clientSecret
+            !startTime?.rentStartTime || !stripe || !clientSecret
               ? "bg-slate-500 cursor-not-allowed hover:bg-slate-600 dark:bg-slate-700 dark:hover:bg-slate-700"
               : transactionId
               ? "bg-green-700 hover:bg-green-800 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 focus:ring-green-300"

@@ -32,7 +32,7 @@ export const userPath = [
       {
         name: "My Coupons",
         path: "coupons",
-        element: <></>,
+        element: <>hi</>,
       },
     ],
   },

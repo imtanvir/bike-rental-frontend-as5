@@ -30,27 +30,27 @@ const Sidebar = ({ role }: { role: string }) => {
     {
       icon: <UserIcon className="w-4 h-4 hover:text-white" />,
       title: "Profile",
-      to: "/admin/dashboard",
+      to: `/${role}/dashboard`,
     },
     {
       icon: <BikeIcon className="w-4 h-4 hover:text-white" />,
       title: "Bike Management",
-      to: "/admin/dashboard/bike-management",
+      to: `bike-management`,
     },
     {
       icon: <UsersIcon className="w-4 h-4 hover:text-white" />,
       title: "User Management",
-      to: "/admin/users/user-management",
+      to: `user-management`,
     },
     {
       icon: <FaCartShopping className="w-4 h-4 hover:text-white" />,
       title: "Rent Management",
-      to: "/admin/users/rent-management",
+      to: `rent-management`,
     },
     {
       icon: <RiCoupon2Line className="w-4 h-4 hover:text-white" />,
       title: "Coupon Management",
-      to: "/admin/users/coupon-management",
+      to: `coupon-management`,
     },
   ];
 
@@ -58,7 +58,7 @@ const Sidebar = ({ role }: { role: string }) => {
     {
       icon: <UserIcon className="w-4 h-4" />,
       title: "Profile",
-      to: "/user/dashboard",
+      to: `/${role}/dashboard`,
     },
     {
       icon: <FaCartShopping className="w-4 h-4 hover:text-white" />,
@@ -68,12 +68,12 @@ const Sidebar = ({ role }: { role: string }) => {
     {
       icon: <BikeIcon className="w-4 h-4 hover:text-white" />,
       title: "Bikes",
-      to: "/user/dashboard/available-bikes",
+      to: `/${role}/dashboard/available-bikes`,
     },
     {
       icon: <RiCoupon2Line className="w-4 h-4 hover:text-white" />,
       title: "My Coupon",
-      to: "/user/dashboard/coupons",
+      to: `coupons`,
     },
   ];
 
@@ -92,7 +92,7 @@ const Sidebar = ({ role }: { role: string }) => {
             </NavItem>
           ))}
 
-        {["superadmin", "admin"].includes(role) &&
+        {["superAdmin", "admin"].includes(role) &&
           adminSidebarItems.map((item) => (
             <NavItem key={item.title} icon={item.icon}>
               <Link

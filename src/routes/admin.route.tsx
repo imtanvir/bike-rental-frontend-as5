@@ -1,5 +1,6 @@
 import Profile from "@/components/Profile";
 import ProtectedRoute from "@/layout/ProtectedRoute";
+import BikeManagement from "@/pages/BikeManagement";
 import UserProfileDashboard from "@/pages/UserDashboard";
 
 export const adminPath = [
@@ -20,7 +21,7 @@ export const adminPath = [
       {
         name: "Bike Management",
         path: "bike-management",
-        element: <></>,
+        element: <BikeManagement />,
       },
       {
         name: "User Management",

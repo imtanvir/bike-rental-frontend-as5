@@ -49,7 +49,7 @@ const BookingModal = ({
   };
 
   return (
-    <DialogContent className="sm:max-w-[425px]">
+    <DialogContent className="sm:max-w-[425px] w-[90%]">
       <DialogHeader>
         <DialogTitle>Rent Your Bike</DialogTitle>
         <DialogDescription>
@@ -66,11 +66,11 @@ const BookingModal = ({
           {selectedTime ? `Select Start Time: ${selectedTime}` : "Select Time"}
         </Button>
       </div>
-      <DialogFooter>
+      <DialogFooter className="flex flex-row gap-4 justify-end">
         <Link to={`/payment/${id}`}>
           <Button
             onClick={handlePay}
-            className="bg-indigo-800 text-white hover:bg-indigo-700 dark:bg-indigo-700 dark:text-slate-100 dark:hover:bg-slate-600"
+            className="bg-indigo-800 text-white hover:bg-indigo-700 dark:bg-indigo-700 dark:text-slate-100 dark:hover:bg-indigo-600"
           >
             Pay
           </Button>
@@ -79,7 +79,7 @@ const BookingModal = ({
       </DialogFooter>
 
       <Dialog open={isTimePickerOpen} onOpenChange={setIsTimePickerOpen}>
-        <DialogContent className="sm:max-w-[300px]">
+        <DialogContent className="sm:max-w-[300px] dark:bg-slate-800 w-[90%] rounded">
           <DialogHeader>
             <DialogTitle>Start Time</DialogTitle>
             <DialogDescription>
@@ -96,12 +96,17 @@ const BookingModal = ({
                 type="time"
                 value={selectedTime}
                 onChange={handleTimeChange}
-                className="col-span-3 user-select-none"
+                className="col-span-3 user-select-none text-slate-300"
               />
             </div>
           </div>
           <DialogFooter>
-            <Button onClick={handleConfirmTime}>Confirm</Button>
+            <Button
+              className="bg-indigo-700 text-white hover:bg-indigo-600"
+              onClick={handleConfirmTime}
+            >
+              Confirm
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -1,4 +1,5 @@
 import BookingModal from "@/components/BookingModal";
+import NoDataAvailable from "@/components/NoDataAvailable";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,46 +12,105 @@ import {
 } from "@/components/ui/card";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { useAppSelector } from "@/hooks/hooks";
-import { userCurrentToken } from "@/redux/features/auth/authSlice";
+import { currentUser, userCurrentToken } from "@/redux/features/auth/authSlice";
 import { useGetSingleBikeMutation } from "@/redux/features/bike/bikeApi";
 import { TUser } from "@/redux/features/profile/profileSlice";
 import { jwtDecode } from "jwt-decode";
 import { Star } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import { FaArrowRight } from "react-icons/fa";
+import { Link, Navigate, useParams } from "react-router-dom";
 
 const BikeDetails = () => {
   const token = useAppSelector(userCurrentToken);
   const { id } = useParams();
   const [bikeData, { data: bike }] = useGetSingleBikeMutation();
-
+  const [isMainOpen, setIsMainOpen] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const user = useAppSelector(currentUser);
   useEffect(() => {
+    setLoading(true);
     const res = async () => {
-      await bikeData(id);
+      const response = await bikeData(id);
+      console.log({ response });
+      if (response?.error) {
+        console.log("Bike not found");
+        setHasError(true); // Set error state when there's an error
+      } else {
+        setHasError(false);
+      }
+      setLoading(false);
     };
 
     res();
-  }, []);
+  }, [id, bikeData]);
+
   const handleAuth = () => {
     if (token) {
       const decoded: TUser = jwtDecode(token);
       const currentTime = Date.now() / 1000;
 
-      // If token expired, try refreshing the access token
+      // If token expired
       if ((decoded.exp as number) < currentTime) {
         <Navigate to={"/login"} replace={true} />;
       }
     }
   };
-  const [isMainOpen, setIsMainOpen] = useState(false);
 
+  if (loading) {
+    return (
+      <section className="relative h-[80vh]">
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex md:flex-row flex-col-reverse py-20 md:items-end items-center justify-center gap-4 poppins-0regular dark:text-slate-300">
+          <div className="inline-flex items-center px-4 py-2 font-semibold leading-6 md:text-xl text-sm  text-indigo-700 dark:text-slate-300 transition ease-in-out duration-150 cursor-not-allowed">
+            <svg
+              className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+            Loading...
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (hasError) {
+    return (
+      <section className="relative h-[80vh]">
+        <NoDataAvailable />
+      </section>
+    );
+  }
   return (
     <section className="dark:bg-gradient-to-b dark:from-background dark:to-muted bg-slate-50 bg-gradient-to-b from-green-50 to-blue-50">
       <div className="container mx-auto px-4 py-8">
         <Card className="max-w-4xl mx-auto poppins-regular dark:text-slate-300">
           <CardHeader>
-            <CardTitle className="text-3xl font-bold">
-              {bike?.data?.name}
+            <CardTitle className="text-3xl font-bold flex justify-between items-center">
+              <h2>{bike?.data?.name}</h2>
+              <Link
+                to={"/"}
+                className="flex gap-2 text-base poppins-regular items-center rounded bg-indigo-600 p-2"
+              >
+                back
+                <FaArrowRight className="text-sm" />
+              </Link>
             </CardTitle>
             <CardDescription>
               {bike?.data?.brand} - {bike?.data?.year}
@@ -145,14 +205,15 @@ const BikeDetails = () => {
               </div>
             </div>
           </CardContent>
-          <CardFooter>
+          <CardFooter className={`${user?.role !== "user" ? "hidden" : ""}`}>
             <Dialog open={isMainOpen} onOpenChange={setIsMainOpen}>
               <DialogTrigger asChild>
-                {/* <Button variant="outline">Edit Profile</Button> */}
                 <Button
                   className={`${
-                    !bike?.data?.isAvailable ? "cursor-not-allowed" : ""
-                  } w-full text-lg py-6 bg-indigo-800 text-white hover:bg-indigo-700 dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600`}
+                    !bike?.data?.isAvailable
+                      ? "cursor-not-allowed dark:bg-slate-700"
+                      : ""
+                  } w-full text-lg py-6 bg-indigo-800 text-white hover:bg-indigo-700 dark:text-slate-200`}
                   disabled={!bike?.data?.isAvailable}
                   onClick={() => handleAuth()}
                 >

@@ -16,6 +16,27 @@ const bikeApi = baseApi.injectEndpoints({
         credentials: "include",
       }),
     }),
+    updateSingleBike: builder.mutation({
+      query: (data) => ({
+        url: `/bikes/${data._id}`,
+        method: "PUT",
+        body: data,
+        credentials: "include",
+      }),
+    }),
+
+    deleteSingleBike: builder.mutation({
+      query: (id) => ({
+        url: `/bikes/${id}`,
+        method: "DELETE",
+        credentials: "include",
+      }),
+    }),
   }),
 });
-export const { useGetAllBikesQuery, useGetSingleBikeMutation } = bikeApi;
+export const {
+  useGetAllBikesQuery,
+  useGetSingleBikeMutation,
+  useUpdateSingleBikeMutation,
+  useDeleteSingleBikeMutation,
+} = bikeApi;
