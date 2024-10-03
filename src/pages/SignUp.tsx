@@ -1,5 +1,3 @@
-import FormCustom from "@/components/FormCustom";
-import FormInput from "@/components/FormInput";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -8,30 +6,86 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useSignUpMutation } from "@/redux/features/auth/authAPi";
-import { FieldValues } from "react-hook-form";
+import { ChangeEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const SignUp = () => {
   const navigate = useNavigate();
   const [signUp] = useSignUpMutation();
-  const onSubmit = async (data: FieldValues) => {
+  const [userData, setUserData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    phone: "",
+    address: "",
+    image: null,
+  });
+  const [selectUserImg, setSelectUserImg] = useState<{ image: File[] | null }>({
+    image: null,
+  });
+  const handleInputChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const { name, value } = e.target;
+    if (name === "phone") {
+      const numericValue = value.replace(/\D/g, "");
+      setUserData((prevUser) => ({
+        ...prevUser,
+        [name]: numericValue,
+      }));
+    } else {
+      setUserData((prevUser) => ({ ...prevUser, [name]: value }));
+    }
+  };
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const fileList: File[] = Array.from(e.target.files);
+      setSelectUserImg((prevData) => ({
+        ...prevData,
+        image: fileList,
+      }));
+    }
+  };
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
     const toastId = toast.loading("Signing up");
 
     try {
+      const submissionData = new FormData();
       const userInfo = {
-        name: data.name,
-        email: data.email,
-        password: data.password,
-        phone: data.phone,
-        address: data.address,
+        name: userData.name,
+        email: userData.email,
+        password: userData.password,
+        phone: userData.phone,
+        address: userData.address,
       };
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const response = await signUp(userInfo);
 
-      toast.success("Sign up successful!", { id: toastId, duration: 2000 });
-      navigate("/login");
+      // Append other form data as JSON
+      submissionData.append("data", JSON.stringify(userInfo));
+
+      if (selectUserImg.image) {
+        selectUserImg.image.forEach((file) => {
+          submissionData.append("file", file);
+        });
+      }
+
+      const response = await signUp(submissionData);
+      if (response?.data?.success === true) {
+        toast.success("User updated successfully", {
+          id: toastId,
+          duration: 2000,
+          className: "bg-green-500 text-white border-green-400",
+        });
+        navigate("/login");
+      }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast.error("Something went wrong!");
@@ -40,60 +94,102 @@ const SignUp = () => {
   return (
     <Card className="mx-auto max-w-sm mt-24">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold">Login</CardTitle>
+        <CardTitle className="text-2xl font-bold">Sign Up</CardTitle>
         <CardDescription>
-          Enter your email and password to login to your account
+          Enter your details to create your account
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <FormCustom onSubmit={onSubmit}>
+        <form onSubmit={onSubmit}>
           <div className="space-y-4">
             <div className="space-y-2">
-              <FormInput
+              <Label htmlFor="name" className="text-sm font-medium">
+                NAME
+              </Label>
+              <Input
+                onChange={handleInputChange}
+                value={userData.name}
+                id="name"
                 name="name"
                 type="text"
                 placeholder="type your name"
-                label="Name"
               />
             </div>
             <div className="space-y-2">
-              <FormInput
+              <Label htmlFor="email" className="text-sm font-medium">
+                EMAIL
+              </Label>
+              <Input
+                onChange={handleInputChange}
+                value={userData.email}
+                id="email"
                 name="email"
                 type="email"
                 placeholder="ex: dhaka, bangladesh"
-                label="Email"
               />
             </div>
             <div className="space-y-2">
-              <FormInput
+              <Label htmlFor="phone" className="text-sm font-medium">
+                PHONE
+              </Label>
+              <Input
+                onChange={handleInputChange}
+                value={userData.phone}
+                id="phone"
                 name="phone"
                 type="text"
                 placeholder="+09666999"
-                label="Phone"
               />
             </div>
             <div className="space-y-2">
-              <FormInput
+              <Label htmlFor="address" className="text-sm font-medium">
+                ADDRESS
+              </Label>
+              <Input
+                onChange={handleInputChange}
+                value={userData.address}
+                id="address"
                 name="address"
                 type="text"
                 placeholder="Dhaka, Bangladesh"
-                label="Address"
               />
             </div>
             <div className="space-y-2">
-              <FormInput
+              <Label htmlFor="image" className="text-sm font-medium">
+                PHOTO
+              </Label>
+              <Input
+                onChange={handleFileChange}
+                id="image"
+                name="image"
+                type="file"
+                placeholder="Select your photo"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password" className="text-sm font-medium">
+                PASSWORD
+              </Label>
+              <Input
+                onChange={handleInputChange}
+                value={userData.password}
+                id="password"
                 name="password"
                 type="password"
                 placeholder="Type your password"
-                label="Password"
               />
             </div>
             <div className="space-y-2">
-              <FormInput
-                name="confirm_password"
+              <Label htmlFor="confirm_password" className="text-sm font-medium">
+                CONFIRM PASSWORD
+              </Label>
+              <Input
+                onChange={handleInputChange}
+                value={userData.confirmPassword}
+                id="confirmPassword"
+                name="confirmPassword"
                 type="password"
                 placeholder="confirm your password"
-                label="Confirm Password"
               />
             </div>
 
@@ -109,7 +205,7 @@ const SignUp = () => {
               </span>
             </div>
           </div>
-        </FormCustom>
+        </form>
       </CardContent>
     </Card>
   );

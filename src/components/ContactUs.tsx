@@ -9,9 +9,10 @@ const ContactUs = () => {
   }>();
 
   //   const [sendFeedback] = useSendFeedbackMutation();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   const onSubmit = async (data: { email: string; message: string }) => {
     const toastId = toast.loading("Logging In");
+    console.log(data);
     try {
       //   const feedback = {
       //     email: data.email,

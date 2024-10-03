@@ -17,6 +17,7 @@ import bikeReducer from "./features/bike/bikeSlice";
 import userRentals from "./features/booking/rentalSlice";
 import profileReducer from "./features/profile/profileSlice";
 import rentStartTime from "./features/rentTime/RentTimeSlice";
+import allUsers from "./features/users/usersSlice";
 const persistConfig = {
   key: "auth",
   storage,
@@ -33,6 +34,7 @@ export const store = configureStore({
     bike: bikeReducer,
     startTime: rentStartTime,
     rentals: userRentals,
+    users: allUsers,
   },
   middleware: (getDefaultMiddlewares) =>
     getDefaultMiddlewares({

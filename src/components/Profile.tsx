@@ -6,39 +6,22 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
-import {
-  currentUser,
-  setUser,
-  userCurrentToken,
-} from "@/redux/features/auth/authSlice";
+import { useAppSelector } from "@/hooks/hooks";
+import { currentUser } from "@/redux/features/auth/authSlice";
 import { useGetRentalsQuery } from "@/redux/features/booking/bookingApi";
 import { TBooking } from "@/redux/features/booking/rentalSlice";
-import { useUpdateUserProfileMutation } from "@/redux/features/profile/profileApi";
 import { TUser } from "@/redux/features/profile/profileSlice";
 import { lastLogInTime } from "@/utils/lastLoginTime";
 import { MailIcon, MapPinIcon, PhoneIcon, UserIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import ProfileEditForm from "./ProfileEditForm";
 
 const Profile = () => {
-  const dispatch = useAppDispatch();
   const { data, refetch } = useGetRentalsQuery(undefined);
-  const currentToken = useAppSelector(userCurrentToken);
-  const [updateProfile] = useUpdateUserProfileMutation();
   const user = useAppSelector(currentUser);
   console.log("User:", user);
   const [isEditing, setIsEditing] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [current_user, setCurrent_user] = useState({
-    name: (user as TUser).name,
-    email: (user as TUser).email,
-    phone: (user as TUser).phone,
-    address: (user as TUser).address,
-    role: (user as TUser).role,
-  });
 
   useEffect(() => {
     if (refetch) {
@@ -46,35 +29,6 @@ const Profile = () => {
     }
   }, [refetch]);
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    console.log(e.target.name, e.target.value);
-    const { name, value } = e.target;
-    if (name === "phone") {
-      const numericValue = value.replace(/\D/g, "");
-      setCurrent_user((prevUser) => ({ ...prevUser, [name]: numericValue }));
-    } else {
-      setCurrent_user((prevUser) => ({ ...prevUser, [name]: value }));
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsProcessing(!isProcessing);
-    const toastId = toast.loading("Profile updating...");
-    const response = await updateProfile(current_user);
-    if (response?.data?.success === true) {
-      dispatch(
-        setUser({ user: { ...user, ...current_user }, token: currentToken })
-      );
-      toast.success("Profile updated successfully", { id: toastId });
-      setIsProcessing(!isProcessing);
-      setIsEditing(false);
-    } else {
-      toast.error("Something went wrong", { id: toastId });
-    }
-  };
   const createdAt = (user as TUser).createdAt;
   const accountOpenedDate = new Date(createdAt as string)
     .toUTCString()
@@ -97,7 +51,6 @@ const Profile = () => {
     rentStatus
   );
 
-  console.log({ paidStatus });
   return (
     <>
       <div className="flex-1 p-10 space-y-6 overflow-y-auto poppins-regular">
@@ -122,70 +75,38 @@ const Profile = () => {
             </CardHeader>
             <CardContent>
               {isEditing ? (
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Name</Label>
-                    <Input
-                      id="name"
-                      name="name"
-                      value={current_user.name || ""}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={current_user.email || ""}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">Phone</Label>
-                    <Input
-                      id="phone"
-                      name="phone"
-                      type="text"
-                      value={current_user.phone || ""}
-                      onChange={handleInputChange}
-                      pattern="[0-9]*"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="address">Address</Label>
-                    <Input
-                      id="address"
-                      name="address"
-                      value={current_user.address || ""}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-
-                  <Button disabled={isProcessing} type="submit">
-                    Save Changes
-                  </Button>
-                </form>
+                <ProfileEditForm
+                  user={user as TUser}
+                  isProcessing={isProcessing}
+                  isEditing={isEditing}
+                  setIsProcessing={setIsProcessing}
+                  setIsEditing={setIsEditing}
+                />
               ) : (
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-2">
-                    <UserIcon className="w-4 h-4 text-muted-foreground" />
-                    <span>{(user as TUser).name}</span>
+                <div className="flex justify-between items-start">
+                  <div className="space-y-4">
+                    <div className="flex items-center space-x-2">
+                      <UserIcon className="w-4 h-4 text-muted-foreground" />
+                      <span>{(user as TUser).name}</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <MailIcon className="w-4 h-4 text-muted-foreground" />
+                      <span>{(user as TUser).email}</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <PhoneIcon className="w-4 h-4 text-muted-foreground" />
+                      <span>{(user as TUser).phone}</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <MapPinIcon className="w-4 h-4 text-muted-foreground" />
+                      <span>{(user as TUser).address}</span>
+                    </div>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <MailIcon className="w-4 h-4 text-muted-foreground" />
-                    <span>{(user as TUser).email}</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <PhoneIcon className="w-4 h-4 text-muted-foreground" />
-                    <span>{(user as TUser).phone}</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <MapPinIcon className="w-4 h-4 text-muted-foreground" />
-                    <span>{(user as TUser).address}</span>
+                  <div className="h-20 w-20 rounded-xl overflow-hidden">
+                    <img
+                      src={(user as TUser).image?.[0].url}
+                      alt={(user as TUser).name as string}
+                    />
                   </div>
                 </div>
               )}

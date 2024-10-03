@@ -1,8 +1,10 @@
 import { RootState } from "@/redux/store";
+import { TImage } from "@/types/intex";
 import { createSlice } from "@reduxjs/toolkit";
 export type TUser = {
   _id: null | string;
   name: null | string;
+  image: TImage[] | null;
   email: null | string;
   password: null | string;
   phone: null | string;
@@ -19,6 +21,7 @@ const initialState: TUser = {
   name: null,
   email: null,
   password: null,
+  image: null,
   phone: null,
   address: null,
   lastLogin: null,

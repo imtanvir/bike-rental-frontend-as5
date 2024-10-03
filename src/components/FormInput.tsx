@@ -14,13 +14,24 @@ const FormInput = ({ name, type, placeholder, label }: TFormInput) => {
   return (
     <>
       {label && <Label htmlFor={name}>{label}</Label>}
-      <Input
-        id={name}
-        type={type}
-        placeholder={placeholder}
-        required
-        {...register(name)}
-      />
+      {type === "file" ? (
+        <Input
+          id={name}
+          type={type}
+          placeholder={placeholder}
+          required
+          accept="image/*"
+          {...register(name)}
+        />
+      ) : (
+        <Input
+          id={name}
+          type={type}
+          placeholder={placeholder}
+          required
+          {...register(name)}
+        />
+      )}
     </>
   );
 };

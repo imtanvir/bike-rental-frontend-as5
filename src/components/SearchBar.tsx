@@ -1,82 +1,69 @@
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
+import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
+import { useGetAllBikesQuery } from "@/redux/features/bike/bikeApi";
+import { bikeCurrentBikes, setBikes } from "@/redux/features/bike/bikeSlice";
+import { useEffect, useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import { RiMotorbikeFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 
-const tags = Array.from({ length: 0 }).map(
-  (_, i, a) => `v1.2.0-beta.${a.length - i}`
-);
 const SearchBar = () => {
-  // const searchResult = [];
+  const dispatch = useAppDispatch();
+  const { data, refetch } = useGetAllBikesQuery(undefined);
+  const allBikes = useAppSelector(bikeCurrentBikes);
 
+  useEffect(() => {
+    if (data?.data) {
+      dispatch(setBikes({ data: data?.data }));
+    }
+  }, [data, dispatch]);
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
+
+  const [searchTerms, setSearchTerms] = useState("");
+  const searchResultBikes = allBikes?.filter(
+    (bike) =>
+      bike.name.toLowerCase().includes(searchTerms.toLowerCase()) ||
+      bike.brand.toLowerCase().includes(searchTerms.toLowerCase()) ||
+      bike.model.toLowerCase().includes(searchTerms.toLowerCase())
+  );
+  console.log({ searchResultBikes, searchTerms }, searchTerms.length);
   return (
     <>
       <div className="relative md:w-1/3 w-full">
         <div className="">
           <CiSearch className="absolute text-gray-500 font-medium text-[3rem] ps-[20px]" />
           <input
-            className=" w-full text-[19px] bg-white dark:bg-slate-900 text-[#414141] dark:text-slate-100 ps-[50px] px-[30px] py-[10px] rounded-full outline-none border-0 shadow-md poppins-regular"
+            className=" w-full text-[19px] bg-white dark:bg-slate-900 text-[#414141] dark:text-slate-300 ps-[50px] px-[30px] py-[10px] rounded-full outline-none border-0 shadow-md poppins-regular"
+            name="searchTerm"
             placeholder="Search By bike, model or brand..."
+            value={searchTerms}
+            onChange={(e) => setSearchTerms(e.target.value)}
+            autoComplete="off"
           />
         </div>
-        {/* <div
-          className={`flex flex-col bg-gray-50  absolute -bottom-full top-full left-[4%] w-[90%] min-h-[10rem] overflow-auto scrollbar-thin border rounded-b shadow-md ${
-            searchResult?.length === 0 ? "py-0 hidden" : "py-1 block"
+        <div
+          className={`flex flex-col bg-gray-50 dark:bg-slate-900  absolute -bottom-full top-full left-[4%] w-[90%] min-h-[10rem] overflow-auto scrollbar-thin border rounded-b shadow-md ${
+            searchTerms.length === 0 ? "py-0 hidden" : "py-1 block"
           }`}
         >
-          <Link
-            to={"/"}
-            className="border-b border-gray-200 p-2 dark:hover:bg-slate-800 flex gap-1 items-center"
-          >
-            <RiMotorbikeFill className=" dark:text-indigo-500" /> All
-          </Link>
-          <Link
-            to={"/"}
-            className="border-b border-gray-200 p-2 dark:hover:bg-slate-800 flex gap-1 items-center"
-          >
-            <RiMotorbikeFill className=" dark:text-indigo-500" /> All
-          </Link>
-          <Link
-            to={"/"}
-            className="border-b border-gray-200 p-2 dark:hover:bg-slate-800 flex gap-1 items-center"
-          >
-            <RiMotorbikeFill className=" dark:text-indigo-500" /> All
-          </Link>
-          <Link
-            to={"/"}
-            className="border-b border-gray-200 p-2 dark:hover:bg-slate-800 flex gap-1 items-center"
-          >
-            <RiMotorbikeFill className=" dark:text-indigo-500" /> All
-          </Link>
-        </div> */}
-
-        <ScrollArea
-          className={` ${
-            tags?.length === 0 ? "py-0 hidden" : "py-1 block"
-          } relative h-72 w-[90%] left-[4%] rounded-md border bg-white dark:bg-slate-800`}
-        >
-          <div className="p-4 poppins-regular">
-            {tags.length > 0 ? (
-              tags.map((tag) => (
-                <>
-                  <Link
-                    to={"/"}
-                    className=" p-2 dark:hover:bg-slate-800 text-sm flex gap-1 items-center"
-                  >
-                    <RiMotorbikeFill className=" dark:text-indigo-500 md:text-lg text-base" />{" "}
-                    {tag}
-                  </Link>
-                  <Separator className="my-2 dark:bg-slate-700" />
-                </>
-              ))
-            ) : (
-              <p className="text-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 poppins-regular">
-                Related bike not found!
-              </p>
-            )}
-          </div>
-        </ScrollArea>
+          {searchResultBikes?.length !== 0 ? (
+            searchResultBikes?.map((bike) => (
+              <Link
+                key={bike._id}
+                to={`/bike-details/${bike._id}`}
+                className="border-b border-gray-200 dark:border-slate-500 p-2 dark:bg-slate-700 dark:hover:bg-slate-800  dark:text-slate-300 flex gap-1 items-center"
+              >
+                <RiMotorbikeFill className=" dark:text-indigo-500" />{" "}
+                {bike.name}
+              </Link>
+            ))
+          ) : (
+            <p className="text-center dark:text-slate-300 poppins-regular box-border pt-10">
+              No Bike exist...
+            </p>
+          )}
+        </div>
       </div>
     </>
   );
