@@ -34,7 +34,7 @@ const Payment = () => {
               <div className="max-w-sm rounded overflow-hidden shadow-lg bg-indigo-100 dark:bg-slate-800">
                 <img
                   className="w-full"
-                  src={bike?.data?.image}
+                  src={bike?.data?.image?.[0]?.url}
                   alt={bike?.data?.name}
                 />
                 <div className="px-6 py-4">

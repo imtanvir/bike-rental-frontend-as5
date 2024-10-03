@@ -55,7 +55,7 @@ const RentalCard = ({ rental }: { rental: TBooking }) => {
         <div className="sm:w-1/3 p-4">
           <div className="relative w-full h-48 sm:h-full overflow-hidden rounded-lg">
             <img
-              src={rental?.bikeId?.image ?? placeholderImg}
+              src={rental?.bikeId?.image?.[0]?.url ?? placeholderImg}
               alt={rental.bikeId?.name}
               className="w-full h-full object-cover rounded-lg hover:transition-transform transition-transform hover:scale-125"
             />

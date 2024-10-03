@@ -1,9 +1,14 @@
+export type TImage = {
+  id: string;
+  url: string;
+  isRemove: boolean;
+};
 export type TBike = {
   _id: string;
-  image: string | null;
+  image: TImage[] | null;
   name: string;
   description: string;
-  pricePerHour: string;
+  pricePerHour: number;
   rating: number;
   totalRating: number;
   isAvailable: boolean;

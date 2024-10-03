@@ -8,6 +8,7 @@ import { TUser } from "@/redux/features/profile/profileSlice";
 import { useState } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import { Outlet } from "react-router-dom";
+import "./UserDashboard.css";
 
 export default function UserProfileDashboard() {
   const user = useAppSelector(currentUser);

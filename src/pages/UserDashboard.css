@@ -1,0 +1,11 @@
+.image-circle .edit-img {
+    position: absolute;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.image-circle:hover .edit-img {
+    bottom: -13%;
+    opacity: .8;
+    transition: 0.3s;
+}

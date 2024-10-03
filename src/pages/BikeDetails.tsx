@@ -119,7 +119,7 @@ const BikeDetails = () => {
           <CardContent className="space-y-6">
             <div className="aspect-video relative rounded-lg overflow-hidden">
               <img
-                src={bike?.data?.image ?? ""}
+                src={bike?.data?.image?.[0]?.url ?? ""}
                 alt={bike?.data?.name}
                 className="w-full h-full object-cover hover:transition-transform transition hover:scale-125"
               />

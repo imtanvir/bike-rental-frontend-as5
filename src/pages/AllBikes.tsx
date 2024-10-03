@@ -1,11 +1,10 @@
+import BikeCard from "@/components/BikeCard";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useGetAllBikesQuery } from "@/redux/features/bike/bikeApi";
 import { TBike } from "@/types/intex";
 import { Search } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import pimg from "../assets/images/banner.png";
 
 const bikes = [
@@ -175,26 +174,13 @@ const AllBikes = () => {
           {data?.data?.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
               {data?.data?.map((bike: TBike) => (
-                <Card key={bike._id}>
-                  <div className="p-4">
-                    <div className="aspect-w-16 aspect-h-9 mb-4">
-                      <img
-                        src={bike.image as string}
-                        alt={bike.name}
-                        className="object-cover rounded-lg"
-                      />
-                    </div>
-                    <h3 className="text-lg font-semibold">{bike.name}</h3>
-                    <p>Brand: {bike.brand}</p>
-                    <p>Model: {bike.model}</p>
-                    <p>Rate: ${bike.pricePerHour}/hr</p>
-                    <Link to={`/bike-details/${bike._id}`}>
-                      <Button className="w-full mt-4 bg-indigo-800 hover:bg-indigo-600 hover:text-slate-200 text-slate-300">
-                        View Details
-                      </Button>
-                    </Link>
-                  </div>
-                </Card>
+                <BikeCard
+                  key={bike._id}
+                  id={bike._id}
+                  image={bike.image?.[0]?.url ?? "placeholder_image"}
+                  brand={bike.brand}
+                  model={bike.model}
+                />
               ))}
             </div>
           ) : (

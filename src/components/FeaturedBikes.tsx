@@ -38,7 +38,7 @@ const FeaturedBikes = () => {
                     <BikeCard
                       key={bike._id}
                       id={bike._id}
-                      image={bike.image ?? "placeholder_image"}
+                      image={bike.image?.[0]?.url ?? "placeholder_image"}
                       brand={bike.brand}
                       model={bike.model}
                     />

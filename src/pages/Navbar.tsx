@@ -107,7 +107,9 @@ const Navbar = () => {
                   </DropdownMenuItem>
                   {["user", "superAdmin", "admin"].includes(role) && (
                     <DropdownMenuItem>
-                      <Link to={"/"}>Dashboard</Link>
+                      <Link to={`/${(user as TUser)?.role}/dashboard`}>
+                        Dashboard
+                      </Link>
                     </DropdownMenuItem>
                   )}
                   <DropdownMenuItem>

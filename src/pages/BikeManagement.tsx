@@ -13,7 +13,14 @@ import {
 } from "@/components/ui/alert-dialog";
 import { IoMdClose } from "react-icons/io";
 
+import BikeCreate from "@/components/BikeCreate";
 import NoDataAvailable from "@/components/NoDataAvailable";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -43,6 +50,7 @@ const BikeManagement = () => {
   const [deleteBike] = useDeleteSingleBikeMutation();
   const allBikes = useAppSelector(bikeCurrentBikes);
   const [isEditing, setIsEditing] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [selectedBike, setSelectedBike] = useState<TBike | null>(null);
 
@@ -53,10 +61,10 @@ const BikeManagement = () => {
   }, [data, dispatch]);
   useEffect(() => {
     refetch();
-  }, [refetch, data?.data, dispatch]);
+  }, [refetch]);
 
-  const brands = [...new Set(allBikes?.map((bike) => bike.brand))];
-  const models = [...new Set(allBikes?.map((bike) => bike.model))];
+  const brands = [...new Set(allBikes?.map((bike) => bike?.brand))];
+  const models = [...new Set(allBikes?.map((bike) => bike?.model))];
   const handleDeleteBike = async (id: string) => {
     setIsProcessing(!isProcessing);
     const toastId = toast.loading("Bike deleting...");
@@ -114,6 +122,13 @@ const BikeManagement = () => {
           setIsEditing={setIsEditing}
           setIsProcessing={setIsProcessing}
         />
+      ) : isCreating ? (
+        <BikeCreate
+          isProcessing={isProcessing}
+          isCreating={isCreating}
+          setIsProcessing={setIsProcessing}
+          setIsCreating={setIsCreating}
+        />
       ) : (
         <div className="px-2">
           <div className="w-full border rounded-lg overflow-hidden shadow-md">
@@ -133,81 +148,93 @@ const BikeManagement = () => {
                   Search
                 </Button>
               </div>
-              <div className=" bg-indigo-50 dark:bg-slate-800 p-4 shadow">
-                <h2 className="text-lg font-semibold mb-4">Filters</h2>
-                <div className="flex flex-wrap items-center gap-4">
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id="available"
-                      name="available"
-                      checked={filters.available}
-                      onChange={handleFilterChange}
-                      className="form-checkbox h-5 w-5 text-blue-600 dark:text-slate-300"
-                    />
-                    <label htmlFor="available" className="ml-2">
-                      Available only
-                    </label>
-                  </div>
-                  <div className="flex items-center">
-                    <label htmlFor="brand" className="mr-2">
-                      Brand:
-                    </label>
-                    <select
-                      id="brand"
-                      name="brand"
-                      value={filters.brand}
-                      onChange={handleFilterChange}
-                      className="form-select block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md dark:bg-slate-800 dark:text-slate-300 dark:border-slate-600"
-                    >
-                      <option value="all">All Brands</option>
-                      {brands.map((brand) => (
-                        <option key={brand} value={brand}>
-                          {brand}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="flex items-center">
-                    <label htmlFor="model" className="mr-2">
-                      Model:
-                    </label>
-                    <select
-                      id="model"
-                      name="model"
-                      value={filters.model}
-                      onChange={handleFilterChange}
-                      className="form-select block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md dark:bg-slate-800 dark:text-slate-300 dark:border-slate-600 dark:focus:ring-slate-500 dark:focus:border-slate-500"
-                    >
-                      <option value="all">All Models</option>
-                      {models.map((model) => (
-                        <option key={model} value={model}>
-                          {model}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
+              <div className=" bg-indigo-50 dark:bg-slate-800 p-4 shadow flex justify-between gap-2">
+                <Accordion type="single" collapsible className="w-full">
+                  <AccordionItem value="item-1">
+                    <AccordionTrigger>Filter options</AccordionTrigger>
+                    <AccordionContent>
+                      <div className="flex flex-wrap items-center gap-4">
+                        <div className="flex items-center">
+                          <input
+                            type="checkbox"
+                            id="available"
+                            name="available"
+                            checked={filters.available}
+                            onChange={handleFilterChange}
+                            className="form-checkbox h-5 w-5 text-blue-600 dark:text-slate-300"
+                          />
+                          <label htmlFor="available" className="ml-2">
+                            Available only
+                          </label>
+                        </div>
+                        <div className="flex items-center">
+                          <label htmlFor="brand" className="mr-2">
+                            Brand:
+                          </label>
+                          <select
+                            id="brand"
+                            name="brand"
+                            value={filters.brand}
+                            onChange={handleFilterChange}
+                            className="form-select block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md dark:bg-slate-800 dark:text-slate-300 dark:border-slate-600"
+                          >
+                            <option value="all">All Brands</option>
+                            {brands.map((brand) => (
+                              <option key={brand} value={brand}>
+                                {brand}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="flex items-center">
+                          <label htmlFor="model" className="mr-2">
+                            Model:
+                          </label>
+                          <select
+                            id="model"
+                            name="model"
+                            value={filters.model}
+                            onChange={handleFilterChange}
+                            className="form-select block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md dark:bg-slate-800 dark:text-slate-300 dark:border-slate-600 dark:focus:ring-slate-500 dark:focus:border-slate-500"
+                          >
+                            <option value="all">All Models</option>
+                            {models.map((model) => (
+                              <option key={model} value={model}>
+                                {model}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+                <Button
+                  className="bg-indigo-700 text-white hover:bg-indigo-800  dark:text-slate-100"
+                  onClick={() => setIsCreating(true)}
+                >
+                  Create Bike
+                </Button>
               </div>
               <Table>
-                <TableHeader className="sticky top-0 z-10 dark:bg-slate-700 bg-indigo-200">
-                  <TableRow className="text-center flex flex-row justify-around items-center">
-                    <TableHead className="md:flex-1 flex-auto text-center">
+                <TableHeader className="sticky top-0 z-10 dark:bg-slate-700  bg-indigo-700 hover:bg-indigo-700 ">
+                  <TableRow className="text-center flex flex-row justify-around items-center hover:bg-indigo-700 dark:hover:bg-slate-700">
+                    <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4 box-border">
                       Bike
                     </TableHead>
-                    <TableHead className="md:flex-1 flex-auto text-center">
+                    <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4 box-border">
                       Name
                     </TableHead>
-                    <TableHead className="md:flex-1 flex-auto text-center">
+                    <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4 box-border">
                       Brand
                     </TableHead>
-                    <TableHead className="md:flex-1 flex-auto text-center">
+                    <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4 box-border">
                       Model
                     </TableHead>
-                    <TableHead className="md:flex-1 flex-auto text-center">
+                    <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4 box-border">
                       Available
                     </TableHead>
-                    <TableHead className="md:flex-1 flex-auto text-center">
+                    <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4 box-border">
                       Action
                     </TableHead>
                   </TableRow>
@@ -229,7 +256,7 @@ const BikeManagement = () => {
                               <div className="cursor-pointer rounded-lg flex justify-center items-center overflow-hidden w-20 h-20">
                                 <img
                                   className="w-20 h-20 object-cover rounded-lg transition hover:transition-transform hover:scale-125"
-                                  src={`${item.image}`}
+                                  src={`${item?.image?.[0]?.url}`}
                                   alt={item.name}
                                 />
                               </div>
@@ -238,7 +265,10 @@ const BikeManagement = () => {
                               <AlertDialogCancel className="w-10 h-10 p-0">
                                 <IoMdClose className="text-xl" />
                               </AlertDialogCancel>
-                              <img src={`${item.image}`} alt={item.name} />
+                              <img
+                                src={`${item?.image?.[0]?.url}`}
+                                alt={item.name}
+                              />
                             </AlertDialogContent>
                           </AlertDialog>
                         </TableCell>
