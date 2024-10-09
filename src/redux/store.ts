@@ -15,6 +15,7 @@ import authSignUpReducer from "./features/auth/authSignUpSlice";
 import authReducer from "./features/auth/authSlice";
 import bikeReducer from "./features/bike/bikeSlice";
 import userRentals from "./features/booking/rentalSlice";
+import userCoupon from "./features/coupon/couponSlice";
 import profileReducer from "./features/profile/profileSlice";
 import rentStartTime from "./features/rentTime/RentTimeSlice";
 import allUsers from "./features/users/usersSlice";
@@ -35,6 +36,7 @@ export const store = configureStore({
     startTime: rentStartTime,
     rentals: userRentals,
     users: allUsers,
+    coupon: userCoupon,
   },
   middleware: (getDefaultMiddlewares) =>
     getDefaultMiddlewares({

@@ -34,6 +34,7 @@ const Navbar = () => {
     dispatch(logOut());
     navigate("/login");
   };
+
   return (
     <>
       <nav

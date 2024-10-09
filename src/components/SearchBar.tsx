@@ -27,7 +27,7 @@ const SearchBar = () => {
       bike.brand.toLowerCase().includes(searchTerms.toLowerCase()) ||
       bike.model.toLowerCase().includes(searchTerms.toLowerCase())
   );
-  console.log({ searchResultBikes, searchTerms }, searchTerms.length);
+
   return (
     <>
       <div className="relative md:w-1/3 w-full">

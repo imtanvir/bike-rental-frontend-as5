@@ -33,9 +33,7 @@ const BikeDetails = () => {
     setLoading(true);
     const res = async () => {
       const response = await bikeData(id);
-      console.log({ response });
       if (response?.error) {
-        console.log("Bike not found");
         setHasError(true); // Set error state when there's an error
       } else {
         setHasError(false);
@@ -103,10 +101,10 @@ const BikeDetails = () => {
         <Card className="max-w-4xl mx-auto poppins-regular dark:text-slate-300">
           <CardHeader>
             <CardTitle className="text-3xl font-bold flex justify-between items-center">
-              <h2>{bike?.data?.name}</h2>
+              <p>{bike?.data?.name}</p>
               <Link
                 to={"/"}
-                className="flex gap-2 text-base poppins-regular items-center rounded bg-indigo-600 p-2"
+                className="flex gap-2 text-base text-slate-300 poppins-regular items-center rounded bg-indigo-700 p-2"
               >
                 back
                 <FaArrowRight className="text-sm" />
@@ -221,7 +219,7 @@ const BikeDetails = () => {
                 </Button>
               </DialogTrigger>
               <BookingModal
-                id={bike?.data?._id}
+                bikeId={bike?.data?._id}
                 setIsMainOpen={setIsMainOpen}
               />
             </Dialog>

@@ -117,7 +117,6 @@ const UserEditForm = ({
     };
     const response = await updateUser(queryData);
     if (response?.data?.success === true) {
-      console.log({ response });
       const updatedBikes = allUsers.map((user) =>
         user._id === response?.data?.data?._id
           ? { ...user, ...response.data.data }
@@ -138,7 +137,6 @@ const UserEditForm = ({
       setIsProcessing(false);
     }
   };
-  console.log(isNewImgSelected);
   return (
     <section className="dark:bg-gradient-to-b dark:from-background dark:to-muted bg-slate-50 bg-gradient-to-b from-green-50 to-blue-50 px-5 py-10 mt-5 shadow-md rounded-md">
       <div className="flex justify-between">

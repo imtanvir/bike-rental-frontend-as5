@@ -2,7 +2,6 @@ import { useUserProfileQuery } from "@/redux/features/profile/profileApi";
 
 const Dashboard = () => {
   const { data } = useUserProfileQuery(undefined);
-  console.log({ data });
   return (
     <>
       <h1>This is dashboard and welcome here</h1>

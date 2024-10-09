@@ -107,7 +107,6 @@ const UserManagement = () => {
       (user.name ?? "").toLowerCase().includes(searchTerm.toLowerCase()) &&
       (filters.role === "all" || user.role === filters.role)
   );
-  console.log({ allUsers });
   return (
     <section className="container mx-auto">
       {isEditing ? (

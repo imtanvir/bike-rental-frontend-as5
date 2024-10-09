@@ -6,7 +6,7 @@ export function ModeToggle() {
   const { setTheme } = useTheme();
 
   const themeTogglerFunction = () => {
-    const theme = localStorage.getItem("vite-ui-theme");
+    const theme = localStorage.getItem("ride-pro-theme");
     const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
   };

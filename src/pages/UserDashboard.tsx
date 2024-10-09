@@ -22,7 +22,6 @@ export default function UserProfileDashboard() {
   };
 
   const role = user?.role as string;
-  // console.log({ data });
   return (
     <div className="flex h-screen relative dark:bg-gradient-to-b dark:from-background dark:to-muted bg-slate-50 bg-gradient-to-b from-green-50 to-blue-50">
       {/* Sidebar */}

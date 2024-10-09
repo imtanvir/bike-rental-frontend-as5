@@ -1,6 +1,26 @@
 import { Button } from "@/components/ui/button";
+import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
+import { currentUser } from "@/redux/features/auth/authSlice";
+import {
+  useCreateCouponMutation,
+  useGetCouponsQuery,
+} from "@/redux/features/coupon/couponApi";
+import {
+  currentCoupons,
+  setCoupons,
+  TCoupon,
+} from "@/redux/features/coupon/couponSlice";
 import { useEffect, useRef, useState } from "react";
+import { IoMdClose } from "react-icons/io";
+import { Link } from "react-router-dom";
 import bikeWheel from "../assets/images/wheel.png";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "./ui/alert-dialog";
 const options = [
   { value: "5%", color: "#6c00d6" },
   { value: "10%", color: "#5200a3" },
@@ -9,35 +29,36 @@ const options = [
 ];
 
 const CouponWheel = () => {
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(currentUser);
+  const allCoupons = useAppSelector(currentCoupons);
+  const [createCoupon] = useCreateCouponMutation();
+
   const [rotation, setRotation] = useState(0);
   const [isSpinning, setIsSpinning] = useState(false);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [discount, setDiscount] = useState<string | null>(null);
   const wheelRef = useRef<HTMLDivElement>(null);
 
-  const spinWheel = () => {
-    if (isSpinning) return;
-
-    setIsSpinning(true);
-    setSelectedOption(null);
-
-    const spinRotation = 360 * 5 + Math.random() * 360; // Spin at least 5 times
-    const newRotation = rotation + spinRotation;
-    setRotation(newRotation);
-
-    // Calculate the duration for the spin
-    const spinDuration = 5000; // 5 seconds
-
-    // Set a timeout to stop spinning and calculate the result
-    setTimeout(() => {
-      setIsSpinning(false);
-      const normalizedRotation = ((newRotation % 360) + 360) % 360;
-      const selectedIndex = Math.floor(
-        ((360 - normalizedRotation) / 360) * options.length
+  const { data } = useGetCouponsQuery(undefined);
+  useEffect(() => {
+    if (data) {
+      dispatch(setCoupons({ data: data.data }));
+    }
+  }, [data]);
+  useEffect(() => {
+    if (couponCheckRef.current === 0 && user) {
+      const couponExist = allCoupons?.find(
+        (coupon: TCoupon) => coupon.userId?._id === user?._id
       );
-      setSelectedOption(options[selectedIndex].value);
-      setIsLoading(false);
-    }, spinDuration); // Match this with the CSS transition time
-  };
+      if (couponExist) {
+        setCouponCheck(couponExist);
+        couponCheckRef.current += 1;
+      } else {
+        setCouponCheck(null);
+      }
+    }
+  }, [allCoupons, user]);
 
   useEffect(() => {
     if (wheelRef.current) {
@@ -45,6 +66,54 @@ const CouponWheel = () => {
       wheelRef.current.style.transform = `rotate(${rotation}deg)`;
     }
   }, [rotation]);
+
+  const couponWheelRef = useRef<true | null>(null);
+  const [couponCheck, setCouponCheck] = useState<TCoupon | null>(null);
+  const couponCheckRef = useRef<number>(0);
+
+  const spinWheel = () => {
+    if (["user"].includes(user?.role as string)) {
+      if (isSpinning) return;
+
+      setIsSpinning(true);
+      setSelectedOption(null);
+
+      const spinRotation = 360 * 5 + Math.random() * 360; // Spin at least 5 times
+      const newRotation = rotation + spinRotation;
+      setRotation(newRotation);
+
+      // Calculate the duration for the spin
+      const spinDuration = 5000; // 5 seconds
+
+      // Set a timeout to stop spinning and calculate the result
+      setTimeout(async () => {
+        setIsSpinning(false);
+        const normalizedRotation = ((newRotation % 360) + 360) % 360;
+        const selectedIndex = Math.floor(
+          ((360 - normalizedRotation) / 360) * options.length
+        );
+        const discount = options[selectedIndex].value;
+        const createDate = new Date().toISOString();
+        const couponCode = new Date(createDate).getTime().toString();
+        const data = {
+          couponCode,
+          userId: user?._id as string,
+          createDate,
+          discount: parseInt(discount.slice(0, -1)),
+          isUsed: false,
+          isExpired: false,
+        };
+        const response = await createCoupon(data);
+        if (response.data.success === true) {
+          couponWheelRef.current = true;
+          setSelectedOption(couponCode);
+          setDiscount(discount);
+          setIsLoading(false);
+          dispatch(setCoupons({ data: [...allCoupons, response?.data?.data] }));
+        }
+      }, spinDuration);
+    }
+  };
 
   const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -114,16 +183,55 @@ const CouponWheel = () => {
             </div>
           </div>
           <div className="flex flex-col">
-            <Button
-              onClick={() => {
-                spinWheel();
-                setIsLoading(!isLoading);
-              }}
-              disabled={isSpinning}
-              className="bg-gradient-to-r from-violet-500 to-fuchsia-500 animate-pulse animate-infinite animate-ease-linear hover:animate-none"
-            >
-              {isSpinning ? "Spinning..." : "Spin the Wheel"}
-            </Button>
+            {["user"].includes(user?.role as string) &&
+            !couponCheck &&
+            couponWheelRef.current === null ? (
+              <Button
+                onClick={() => {
+                  spinWheel();
+                  setIsLoading(!isLoading);
+                }}
+                disabled={isSpinning}
+                className="bg-gradient-to-r from-violet-500 to-fuchsia-500 animate-pulse animate-infinite animate-ease-linear hover:animate-none"
+              >
+                {isSpinning ? "Spinning..." : "Spin the Wheel"}
+              </Button>
+            ) : (
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    aria-readonly={true}
+                    className="bg-gradient-to-r from-violet-500 to-fuchsia-500 animate-pulse animate-infinite animate-ease-linear hover:animate-none"
+                  >
+                    Spin the Wheel
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent className="flex flex-col items-end bg-indigo-100 dark:bg-gradient-to-b dark:from-background dark:to-muted">
+                  <AlertDialogCancel className="w-10 h-10 p-0">
+                    <IoMdClose className="text-xl" />
+                  </AlertDialogCancel>
+                  <AlertDialogTitle>
+                    <p>
+                      {user && user.role !== "user"
+                        ? "User only can use the coupon wheel to get coupon from here!"
+                        : (user && user?.role === "user" && couponCheck) ||
+                          (user &&
+                            user?.role === "user" &&
+                            couponWheelRef.current === true)
+                        ? "You must use your previous coupon, otherwise you can't get another!"
+                        : "Log in to use the coupon wheel and get the best discount!"}
+                    </p>
+                  </AlertDialogTitle>
+                  {!user && (
+                    <Link to={"/login"}>
+                      <Button className="dark:bg-indigo-500 dark:hover:bg-indigo-600 dark:text-slate-300">
+                        Log in
+                      </Button>
+                    </Link>
+                  )}
+                </AlertDialogContent>
+              </AlertDialog>
+            )}
 
             {!isLoading ? (
               <div className={`${selectedOption ? "visible" : "invisible"}`}>
@@ -131,8 +239,8 @@ const CouponWheel = () => {
                   className="pb-2 pt-4 text-lg font-semibold"
                   aria-live="polite"
                 >
-                  Your coupon is:{" "}
-                  <span className="text-indigo-500">{selectedOption}</span>
+                  You got <span className="text-indigo-500">{discount}</span>{" "}
+                  discount coupon!
                 </p>
                 <div className="relative inline-flex items-center">
                   <input

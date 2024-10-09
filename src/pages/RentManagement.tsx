@@ -1,0 +1,299 @@
+import {
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { IoMdClose } from "react-icons/io";
+
+import NoDataAvailable from "@/components/NoDataAvailable";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
+import {
+  useGetAllRentalsQuery,
+  useRentCalculationMutation,
+} from "@/redux/features/booking/bookingApi";
+import {
+  currentUserRentals,
+  setRentals,
+  TBooking,
+} from "@/redux/features/booking/rentalSlice";
+import CalculateButton from "@/utils/CalculateButton";
+import { timeConverter } from "@/utils/timeConverter";
+import { AlertDialog } from "@radix-ui/react-alert-dialog";
+import { useEffect, useState } from "react";
+import { FaArrowRightLong } from "react-icons/fa6";
+
+const RentManagement = () => {
+  const dispatch = useAppDispatch();
+  const { data, refetch } = useGetAllRentalsQuery(undefined);
+  const [rentalCalculation] = useRentCalculationMutation();
+  const allRental = useAppSelector(currentUserRentals);
+
+  useEffect(() => {
+    if (data?.data) {
+      dispatch(setRentals({ data: data?.data }));
+    }
+  }, [data, dispatch]);
+  useEffect(() => {
+    refetch();
+  }, [refetch, allRental]);
+
+  const [filters, setFilters] = useState({
+    unpaid: false,
+    running: false,
+    pendingCalculate: false,
+    paid: false,
+  });
+
+  const filteredRental = allRental?.filter(
+    (rent: TBooking) =>
+      (!filters.paid || rent.isPaid) &&
+      (!filters.pendingCalculate ||
+        (rent.pendingCalculation && rent.estimatedReturnTime)) &&
+      (!filters.unpaid ||
+        (!rent.isPaid &&
+          rent.estimatedReturnTime &&
+          rent.pendingCalculation === false)) &&
+      (!filters.running ||
+        (!rent.pendingCalculation && !rent.estimatedReturnTime))
+  );
+  const handleFilterChange = (
+    event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
+  ) => {
+    const target = event.target;
+    const { name } = target;
+    const checked = "checked" in target ? target.checked : null;
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      // [name]: type === "checkbox" ? checked : value,
+      [name]: checked,
+    }));
+  };
+
+
+  return (
+    <section className="container mx-auto">
+      <div className="px-2">
+        <div className="w-full border rounded-lg overflow-hidden shadow-md">
+          <div className="relative">
+            <div className=" bg-indigo-50 dark:bg-slate-800 p-4 shadow flex justify-between gap-2">
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="item-1">
+                  <AccordionTrigger>
+                    <p className="flex gap-2 items-center">
+                      Filter options <FaArrowRightLong />
+                    </p>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div className="flex flex-wrap items-center gap-4">
+                      <div className="flex items-center">
+                        <input
+                          type="checkbox"
+                          id="running"
+                          name="running"
+                          checked={filters.running}
+                          onChange={handleFilterChange}
+                          className="form-checkbox h-5 w-5 text-blue-600 dark:text-slate-300"
+                        />
+                        <label htmlFor="running" className="ml-2">
+                          Running
+                        </label>
+                      </div>
+                      <div className="flex items-center">
+                        <input
+                          type="checkbox"
+                          id="paid"
+                          name="paid"
+                          checked={filters.paid}
+                          onChange={handleFilterChange}
+                          className="form-checkbox h-5 w-5 text-blue-600 dark:text-slate-300"
+                        />
+                        <label htmlFor="paid" className="ml-2">
+                          Paid
+                        </label>
+                      </div>
+                      <div className="flex items-center">
+                        <input
+                          type="checkbox"
+                          id="unpaid"
+                          name="unpaid"
+                          checked={filters.unpaid}
+                          onChange={handleFilterChange}
+                          className="form-checkbox h-5 w-5 text-blue-600 dark:text-slate-300"
+                        />
+                        <label htmlFor="unpaid" className="ml-2">
+                          Unpaid
+                        </label>
+                      </div>
+
+                      <div className="flex items-center">
+                        <input
+                          type="checkbox"
+                          id="pendingCalculate"
+                          name="pendingCalculate"
+                          checked={filters.pendingCalculate}
+                          onChange={handleFilterChange}
+                          className="form-checkbox h-5 w-5 text-blue-600 dark:text-slate-300"
+                        />
+                        <label htmlFor="pendingCalculate" className="ml-2">
+                          Pending Calculation
+                        </label>
+                      </div>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </div>
+            <Table>
+              <TableHeader className="sticky top-0 z-10 dark:bg-slate-700  bg-indigo-700 hover:bg-indigo-700 ">
+                <TableRow className="text-center flex flex-row justify-around items-center hover:bg-indigo-700 dark:hover:bg-slate-700">
+                  <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4 box-border">
+                    Bike
+                  </TableHead>
+                  <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4">
+                    Name
+                  </TableHead>
+                  <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4 box-border">
+                    User
+                  </TableHead>
+                  <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4 box-border">
+                    Start Time
+                  </TableHead>
+                  <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4 box-border">
+                    Exact Return
+                  </TableHead>
+                  <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4 box-border">
+                    Status
+                  </TableHead>
+                  <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4 box-border">
+                    Action
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+            </Table>
+          </div>
+          <div className="max-h-[70vh] overflow-y-auto">
+            <Table>
+              <TableBody>
+                {filteredRental?.length !== 0 &&
+                  filteredRental?.map((item: TBooking) => (
+                    <TableRow
+                      key={item._id}
+                      className="dark:hover:bg-slate-800 text-center flex flex-row justify-around items-center"
+                    >
+                      <TableCell className="font-medium md:flex-1 flex-auto flex justify-center">
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <div className="cursor-pointer rounded-lg flex justify-center items-center overflow-hidden w-20 h-20">
+                              <img
+                                className="w-20 h-20 object-cover rounded-lg transition hover:transition-transform hover:scale-125"
+                                src={`${item?.bikeId?.image?.[0]?.url}`}
+                                alt={item?.bikeId?.name}
+                              />
+                            </div>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent className="flex flex-col items-end">
+                            <AlertDialogCancel className="w-10 h-10 p-0">
+                              <IoMdClose className="text-xl" />
+                            </AlertDialogCancel>
+                            <img
+                              src={`${item?.bikeId?.image?.[0]?.url}`}
+                              alt={item?.bikeId?.name}
+                            />
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </TableCell>
+                      <TableCell className="md:flex-1 flex-auto text-center">
+                        {item?.bikeId?.name}
+                      </TableCell>
+                      <TableCell className="md:flex-1 flex-auto text-center">
+                        {item.userId?.name}
+                      </TableCell>
+                      <TableCell className="md:flex-1 flex-auto text-center">
+                        {item.estimatedReturnTime
+                          ? timeConverter(item?.startTime as Date)
+                          : "N/A"}
+                      </TableCell>
+                      <TableCell className="md:flex-1 flex-auto text-center">
+                        {item.returnTime
+                          ? timeConverter(item?.returnTime)
+                          : "N/A"}
+                      </TableCell>
+                      <TableCell className="md:flex-1 flex-auto text-center">
+                        {item.isPaid ? (
+                          <Badge className="bg-green-500 hover:bg-green-500 text-white dark:text-slate-900">
+                            Paid
+                          </Badge>
+                        ) : item.pendingCalculation ? (
+                          <Badge className="bg-yellow-500 hover:bg-yellow-600 text-white dark:text-slate-900">
+                            Pending
+                          </Badge>
+                        ) : item.pendingCalculation === false &&
+                          !item.estimatedReturnTime?.toString() ? (
+                          <Badge className="bg-blue-500 hover:bg-blue-500 dark:text-slate-50">
+                            Running
+                          </Badge>
+                        ) : (
+                          <Badge className="bg-orange-400 hover:bg-orange-400 text-white dark:text-slate-900">
+                            Unpaid
+                          </Badge>
+                        )}
+                      </TableCell>
+                      <TableCell className="w-[150px] text-center flex gap-2 justify-center">
+                        {item.pendingCalculation ? (
+                          // <Button
+                          //   onClick={() =>
+                          //     handleCalculation(item._id as string)
+                          //   }
+                          //   className="bg-indigo-600 hover:bg-indigo-700 text-slate-100"
+                          // >
+                          //   {isCalculating ? "Calculating..." : "Calculate"}
+                          // </Button>
+                          <CalculateButton
+                            item={item}
+                            setRentals={setRentals}
+                            rentalCalculation={rentalCalculation}
+                            allRental={allRental as TBooking[]}
+                          />
+                        ) : item.pendingCalculation === false &&
+                          !item.estimatedReturnTime?.toString() ? (
+                          <Button
+                            aria-readonly={true}
+                            className="bg-slate-600 dark:hover:bg-slate-500 text-slate-100 cursor-not-allowed"
+                          >
+                            Calculate
+                          </Button>
+                        ) : (
+                          <Button className="bg-green-600 hover:bg-green-600 text-slate-100 cursor-default">
+                            Completed
+                          </Button>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+      </div>
+      {filteredRental?.length === 0 && <NoDataAvailable />}
+    </section>
+  );
+};
+
+export default RentManagement;

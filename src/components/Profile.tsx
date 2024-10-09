@@ -19,7 +19,6 @@ import ProfileEditForm from "./ProfileEditForm";
 const Profile = () => {
   const { data, refetch } = useGetRentalsQuery(undefined);
   const user = useAppSelector(currentUser);
-  console.log("User:", user);
   const [isEditing, setIsEditing] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -104,7 +103,7 @@ const Profile = () => {
                   </div>
                   <div className="h-20 w-20 rounded-xl overflow-hidden">
                     <img
-                      src={(user as TUser).image?.[0].url}
+                      src={(user as TUser).image?.[0].url ?? ""}
                       alt={(user as TUser).name as string}
                     />
                   </div>

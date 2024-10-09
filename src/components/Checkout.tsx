@@ -1,20 +1,35 @@
 import { useAppSelector } from "@/hooks/hooks";
 import { currentUser } from "@/redux/features/auth/authSlice";
-import { useRentABikeMutation } from "@/redux/features/booking/bookingApi";
+import {
+  useRentABikeMutation,
+  useRentPaidUpdateMutation,
+} from "@/redux/features/booking/bookingApi";
 import { useMakeAdvancePaymentMutation } from "@/redux/features/payment/paymentApi";
 import { TUser } from "@/redux/features/profile/profileSlice";
 import { useStartTime } from "@/redux/features/rentTime/RentTimeSlice";
+import { TBike } from "@/types/intex";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-const Checkout = ({ id }: { id: string }) => {
+const Checkout = ({
+  id,
+  payAmount,
+  bikeDetails,
+  rentId = null,
+}: {
+  id: string;
+  payAmount: number;
+  bikeDetails: TBike;
+  rentId?: string | null;
+}) => {
   const stripe = useStripe();
   const elements = useElements();
   const [err, setErr] = useState("");
   const startTime = useAppSelector(useStartTime);
   const [rentABike] = useRentABikeMutation(undefined);
+  const [rentPaidUpdate] = useRentPaidUpdateMutation();
   const [makePayment] = useMakeAdvancePaymentMutation(undefined);
   const [clientSecret, setClientSecret] = useState("");
   const [transactionId, setTransactionId] = useState("");
@@ -23,21 +38,34 @@ const Checkout = ({ id }: { id: string }) => {
   const paymentRef = useRef(0);
   const navigate = useNavigate();
 
-  console.log({ startTime });
+  // useEffect(() =>{
+  //   if(!rentId && !bikeDetails){
+  //     navigate('/all-bikes')
+  // },[])
+
   useEffect(() => {
+    if (bikeDetails?.isAvailable && startTime?.rentStartTime === null) {
+      navigate(`/bike-details/${id}`);
+    }
+
     const advancePayment = async () => {
       const response = await makePayment({
-        amount: 100,
+        amount: payAmount,
       });
       setClientSecret(response.data.data.clientSecret);
     };
 
-    if (paymentRef.current === 0) {
+    if (paymentRef.current === 0 && payAmount !== 0) {
       paymentRef.current = 1;
       advancePayment();
     }
-  }, []);
+  }, [payAmount, startTime?.rentStartTime]);
 
+  const handleErr = () => {
+    if (err) {
+      setErr("");
+    }
+  };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const toastId = toast.loading("Payment processing...");
@@ -80,28 +108,44 @@ const Checkout = ({ id }: { id: string }) => {
       toast.error(confirmError.message, { id: toastId, duration: 2000 });
     } else {
       if (paymentIntent.status === "succeeded") {
-        const response = await rentABike({
-          bikeId: id,
-          startTime: startTime?.rentStartTime,
-          advancePaid: 100,
-        });
-        if (response?.data?.success) {
-          setTransactionId(paymentIntent.id);
-          setProcessing(false);
-          toast.success("Your payment was successful!", {
-            id: toastId,
-            duration: 2000,
-            className: "bg-green-500 text-white border-green-400",
+        if (bikeDetails.isAvailable) {
+          const response = await rentABike({
+            bikeId: id,
+            startTime: startTime?.rentStartTime,
+            advancePaid: 100,
           });
-          setTimeout(() => {
-            navigate(`/${user?.role}/dashboard/rentals`);
-          }, 2000);
+          if (response?.data?.success) {
+            setTransactionId(paymentIntent.id);
+            setProcessing(false);
+            toast.success("Your payment was successful!", {
+              id: toastId,
+              duration: 2000,
+              className: "bg-green-500 text-white border-green-400",
+            });
+            setTimeout(() => {
+              navigate(`/${user?.role}/dashboard/rentals`);
+            }, 2000);
+          }
+        } else if (bikeDetails.isAvailable === false && rentId) {
+          const response = await rentPaidUpdate(rentId);
+          if (response?.data?.success) {
+            setTransactionId(paymentIntent.id);
+            setProcessing(false);
+            toast.success("Your payment was successful!", {
+              id: toastId,
+              duration: 2000,
+              className: "bg-green-500 text-white border-green-400",
+            });
+            setTimeout(() => {
+              navigate(`/${user?.role}/dashboard/rentals`);
+            }, 2000);
+          }
         }
       }
     }
   };
 
-  const currentTheme = localStorage.getItem("vite-ui-theme");
+  const currentTheme = localStorage.getItem("ride-pro-theme");
   const options = {
     style: {
       base: {
@@ -134,22 +178,31 @@ const Checkout = ({ id }: { id: string }) => {
         className=" px-5 md:py-10 flex flex-col gap-2 md:w-1/2 w-full mx-auto bg-white/50 dark:bg-gray-800/20 backdrop-blur-md border border-white/100 dark:border-gray-700/30 shadow-lg rounded-lg p-6"
       >
         <CardElement
+          onChange={handleErr}
           className="  dark:bg-gray-800/20 backdrop-blur-md border border-white/30 dark:border-gray-700/30 shadow-lg rounded-lg p-6"
           options={options}
         />
         <p className="text-red-500">{err}</p>
-
+        <p className="font-semibold bebas-neue-regular dark:text-slate-300 md:text-lg text-base">
+          Your card will be charged{" "}
+          <span className="text-indigo-500">${payAmount}</span>
+        </p>
         <button
           type="submit"
           disabled={
-            !startTime?.rentStartTime ||
+            (!startTime?.rentStartTime && bikeDetails?.isAvailable) ||
+            err.trim().length !== 0 ||
+            payAmount === 0 ||
             !stripe ||
             !clientSecret ||
             processing ||
             transactionId.length > 1
           }
           className={`button ${
-            !startTime?.rentStartTime || !stripe || !clientSecret
+            (!startTime?.rentStartTime && bikeDetails?.isAvailable) ||
+            !stripe ||
+            !clientSecret ||
+            err
               ? "bg-slate-500 cursor-not-allowed hover:bg-slate-600 dark:bg-slate-700 dark:hover:bg-slate-700"
               : transactionId
               ? "bg-green-700 hover:bg-green-800 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 focus:ring-green-300"
@@ -181,7 +234,7 @@ const Checkout = ({ id }: { id: string }) => {
               Processing...
             </span>
           )}
-          {!transactionId && !processing && !err && <>Pay</>}
+          {!transactionId && !processing && <>Pay</>}
           {!processing && transactionId && <>Payment Successful</>}
         </button>
 
@@ -189,6 +242,10 @@ const Checkout = ({ id }: { id: string }) => {
           {transactionId && (
             <span>Your transaction id is: {transactionId}</span>
           )}
+        </p>
+
+        <p className="text-center">
+          Power by <span className="text-indigo-500 font-thin">Stripe</span>
         </p>
       </form>
     </>

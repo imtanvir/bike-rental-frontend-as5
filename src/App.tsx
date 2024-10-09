@@ -6,7 +6,7 @@ import Navbar from "./pages/Navbar";
 function App() {
   return (
     <>
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <ThemeProvider defaultTheme="dark" storageKey="ride-pro-theme">
         <Navbar />
         <Outlet />
         <Footer />

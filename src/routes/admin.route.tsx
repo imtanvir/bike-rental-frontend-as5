@@ -1,6 +1,7 @@
 import Profile from "@/components/Profile";
 import ProtectedRoute from "@/layout/ProtectedRoute";
 import BikeManagement from "@/pages/BikeManagement";
+import RentManagement from "@/pages/RentManagement";
 import UserProfileDashboard from "@/pages/UserDashboard";
 import UserManagement from "@/pages/UserManagement";
 
@@ -32,7 +33,7 @@ export const adminPath = [
       {
         name: "Rent Management",
         path: "rent-management",
-        element: <></>,
+        element: <RentManagement />,
       },
       {
         name: "Coupon Management",

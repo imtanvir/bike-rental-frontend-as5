@@ -15,9 +15,8 @@ const baseQuery = fetchBaseQuery({
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.token;
-    console.log({ tokenBA: token });
+
     if (token) {
-      console.log("hi from token roket");
       headers.set("authorization", `Bearer ${token}`);
     }
 
@@ -32,11 +31,9 @@ const baseQueryWithRefreshToken: BaseQueryFn<
 > = async (args, api, extraOptions): Promise<any> => {
   let result = await baseQuery(args, api, extraOptions);
 
-  console.log({ result });
   if (result && result.error && result.error?.status === 401) {
     // send refresh token
-    console.log("send refresh token");
-    console.log({ result });
+
     const res = await fetch(
       `${import.meta.env.VITE_BASE_URL}/api/auth/refresh-token`,
       {
@@ -44,23 +41,23 @@ const baseQueryWithRefreshToken: BaseQueryFn<
         credentials: "include",
       }
     );
-    console.log(res);
+
     const data = await res.json();
-    console.log({ dres: data });
+
     if (data?.data) {
-      console.log("hi from new access!");
       const user = (api.getState() as RootState).auth.user;
-      console.log({ newUser: user });
-      api.dispatch(
-        setUser({
-          user,
-          token: data.data,
-        })
-      );
+
+      const token = data.data;
+      if (user && token) {
+        api.dispatch(
+          setUser({
+            user,
+            token,
+          })
+        );
+      }
       result = await baseQuery(args, api, extraOptions);
     } else {
-      console.log({ problem: "hi from baseAPi" });
-
       api.dispatch(logOut());
     }
   }

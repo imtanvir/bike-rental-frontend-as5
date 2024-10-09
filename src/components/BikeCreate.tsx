@@ -134,7 +134,6 @@ const BikeCreate = ({
     // Send form data to the backend
     const response = await createBike(submissionData);
     if (response?.data?.success === true) {
-      console.log({ response });
       dispatch(
         setBikes({ data: [response?.data?.data[0], ...(allBikes ?? [])] })
       );

@@ -19,7 +19,7 @@ const ProtectedRoute = ({ children }: { children: ReactNode }) => {
   const location = useLocation();
   const pathname = location.pathname;
   const rolePathValue = pathname.split("/")[1];
-  console.log({ rolePathValue });
+
   useEffect(() => {
     const refreshAccessToken = async () => {
       try {
@@ -27,7 +27,7 @@ const ProtectedRoute = ({ children }: { children: ReactNode }) => {
           `${import.meta.env.VITE_BASE_URL}/api/auth/refresh-token`,
           {
             method: "POST",
-            credentials: "include", // Include cookies
+            credentials: "include",
           }
         );
         const data = await response.json();
@@ -69,15 +69,12 @@ const ProtectedRoute = ({ children }: { children: ReactNode }) => {
   if (!token) {
     return <Navigate to={"/login"} replace={true} />;
   } else if (userCurrent?.role !== "user" && rolePathValue === "payment") {
-    console.log("from payment and user");
     return <Navigate to={"*"} replace={true} />;
   } else if (
     userCurrent &&
     userCurrent.role !== rolePathValue &&
     rolePathValue !== "payment"
   ) {
-    console.log("from not role holder");
-
     return <Navigate to={"*"} replace={true} />;
   }
 

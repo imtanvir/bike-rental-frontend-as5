@@ -1,3 +1,4 @@
+import { useContactUsMutation } from "@/redux/features/bike/bikeApi";
 import { debounce } from "lodash";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -8,20 +9,20 @@ const ContactUs = () => {
     message: string;
   }>();
 
-  //   const [sendFeedback] = useSendFeedbackMutation();
+  const [contactUs] = useContactUsMutation();
 
   const onSubmit = async (data: { email: string; message: string }) => {
-    const toastId = toast.loading("Logging In");
-    console.log(data);
+    const toastId = toast.loading("Sending feedback...");
     try {
-      //   const feedback = {
-      //     email: data.email,
-      //     message: data.message,
-      //   };
-      //   await sendFeedback(feedback);
-      toast.success("Thank you for your feedback", { id: toastId });
+      const feedback = {
+        email: data.email,
+        message: data.message,
+      };
+      const response = await contactUs(feedback);
+      if (response?.data?.success === true) {
+        toast.success("Thank you for your feedback", { id: toastId });
+      }
     } catch (error) {
-      console.log(error);
       toast.error("Something went wrong");
     }
   };
@@ -60,7 +61,7 @@ const ContactUs = () => {
                 type="email"
                 id="email"
                 name="email"
-                className="w-full rounded border border-gray-300 bg-white dark:bg-slate-600 dark:border-slate-700 py-1 px-3 text-base leading-8 text-gray-700 outline-none transition-colors duration-200 ease-in-out focus:border-indigo-500 dark:focus:border-slate-500 focus:ring-2 focus:ring-indigo-200 dark:focus:ring-slate-500"
+                className="w-full rounded border border-gray-300 bg-white dark:bg-slate-600 dark:text-slate-300 dark:border-slate-700 py-1 px-3 text-base leading-8 text-slate-500 outline-none transition-colors duration-200 ease-in-out focus:border-indigo-500 dark:focus:border-slate-500 focus:ring-2 focus:ring-indigo-200 dark:focus:ring-slate-500"
               />
             </div>
             <div className="mb-4">
@@ -79,7 +80,7 @@ const ContactUs = () => {
             </div>
             <button
               type="submit"
-              className="w-full rounded border-0 py-2 px-6 text-lg  focus:outline-none bg-indigo-800 text-white hover:bg-indigo-700 dark:bg-slate-800 shadow-4xl dark:text-slate-100 dark:hover:bg-slate-600"
+              className="w-full rounded border-0 py-2 px-6 text-lg  focus:outline-none bg-indigo-800 text-white hover:bg-indigo-700 dark:bg-indigo-500 shadow-4xl dark:text-slate-100 dark:hover:bg-indigo-600"
             >
               Send
             </button>

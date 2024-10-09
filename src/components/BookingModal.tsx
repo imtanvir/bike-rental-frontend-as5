@@ -17,10 +17,10 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const BookingModal = ({
-  id,
+  bikeId = null,
   setIsMainOpen,
 }: {
-  id: string;
+  bikeId: string | null;
   setIsMainOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const dispatch = useAppDispatch();
@@ -31,7 +31,6 @@ const BookingModal = ({
 
   const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedTime(e.target.value);
-    console.log("time:", moment().toDate());
   };
 
   const handleConfirmTime = () => {
@@ -51,7 +50,7 @@ const BookingModal = ({
   return (
     <DialogContent className="sm:max-w-[425px] w-[90%]">
       <DialogHeader>
-        <DialogTitle>Rent Your Bike</DialogTitle>
+        <DialogTitle>Start Rent Your Bike</DialogTitle>
         <DialogDescription>
           Select your rent start time and go to next step to make an advance
           payment to complete your booking.
@@ -63,11 +62,11 @@ const BookingModal = ({
           className="flex items-center bg-indigo-500 hover:bg-indigo-600 dark:bg-slate-800 text-white dark:hover:bg-slate-400"
         >
           <Clock className="mr-2 h-4 w-4" />
-          {selectedTime ? `Select Start Time: ${selectedTime}` : "Select Time"}
+          {selectedTime ? `Select Start Time  ${selectedTime}` : "Select Time"}
         </Button>
       </div>
       <DialogFooter className="flex flex-row gap-4 justify-end">
-        <Link to={`/payment/${id}`}>
+        <Link to={`/payment/${bikeId}`}>
           <Button
             onClick={handlePay}
             className="bg-indigo-800 text-white hover:bg-indigo-700 dark:bg-indigo-700 dark:text-slate-100 dark:hover:bg-indigo-600"

@@ -125,7 +125,6 @@ const BikeEditForm = ({
   };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("hitting submit");
     const toastId = toast.loading("Bike Data updating...");
     setIsProcessing(!isProcessing);
     const submissionData = new FormData();
@@ -183,7 +182,6 @@ const BikeEditForm = ({
       toast.error("Something went wrong", { id: toastId });
     }
   };
-  console.log(isNewImgSelected);
   return (
     <section className="dark:bg-gradient-to-b dark:from-background dark:to-muted bg-slate-50 bg-gradient-to-b from-green-50 to-blue-50 px-5 py-10 mt-5 shadow-md rounded-md">
       <div className="flex justify-between">

@@ -40,6 +40,15 @@ const bikeApi = baseApi.injectEndpoints({
         credentials: "include",
       }),
     }),
+
+    contactUs: builder.mutation({
+      query: (data) => ({
+        url: "/bikes/contact-us",
+        method: "POST",
+        body: data,
+        credentials: "include",
+      }),
+    }),
   }),
 });
 export const {
@@ -48,4 +57,5 @@ export const {
   useGetSingleBikeMutation,
   useUpdateSingleBikeMutation,
   useDeleteSingleBikeMutation,
+  useContactUsMutation,
 } = bikeApi;
