@@ -85,7 +85,6 @@ const RentManagement = () => {
     }));
   };
 
-
   return (
     <section className="container mx-auto">
       <div className="px-2">
@@ -256,14 +255,6 @@ const RentManagement = () => {
                       </TableCell>
                       <TableCell className="w-[150px] text-center flex gap-2 justify-center">
                         {item.pendingCalculation ? (
-                          // <Button
-                          //   onClick={() =>
-                          //     handleCalculation(item._id as string)
-                          //   }
-                          //   className="bg-indigo-600 hover:bg-indigo-700 text-slate-100"
-                          // >
-                          //   {isCalculating ? "Calculating..." : "Calculate"}
-                          // </Button>
                           <CalculateButton
                             item={item}
                             setRentals={setRentals}
@@ -280,7 +271,7 @@ const RentManagement = () => {
                           </Button>
                         ) : (
                           <Button className="bg-green-600 hover:bg-green-600 text-slate-100 cursor-default">
-                            Completed
+                            Calculated
                           </Button>
                         )}
                       </TableCell>

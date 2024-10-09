@@ -47,7 +47,7 @@ export default function UserProfileDashboard() {
           </Button>
           <Avatar className="w-10 h-10">
             <AvatarImage
-              src="/placeholder.svg?height=40&width=40"
+              src={(user as TUser)?.image?.[0]?.url}
               alt={(user as TUser).name as string}
             />
             <AvatarFallback>
@@ -59,10 +59,17 @@ export default function UserProfileDashboard() {
           </Avatar>
           <div>
             <h2 className="font-semibold text-slate-300">
-              {(user as TUser).name}
+              {(user as TUser).name?.split(" ")[0]}
             </h2>
             <p className="text-sm text-slate-400 just">
-              Role: <span className="capitalize">{(user as TUser).role}</span>
+              Role:{" "}
+              <span className="capitalize">
+                {(user as TUser).role === "admin"
+                  ? "Admin"
+                  : (user as TUser).role === "superAdmin"
+                  ? "Super Admin"
+                  : "User"}
+              </span>
             </p>
           </div>
         </div>

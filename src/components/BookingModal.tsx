@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { useAppDispatch } from "@/hooks/hooks";
 import { setRentStartTime } from "@/redux/features/rentTime/RentTimeSlice";
 import { Clock } from "lucide-react";
-import moment from "moment";
+import moment from "moment-timezone";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -39,10 +39,16 @@ const BookingModal = ({
   // const formattedTime = moment(selectedTime, "HH:mm").format("hh:mm a");
 
   const handlePay = () => {
-    const startRentTime = moment(selectedTime, "HH:mm").toDate();
+    // const currentDateTime = new Date();
+    // const returnRentTime = moment(currentDateTime, "HH:mm").toDate();
+    const startTime = moment(selectedTime, "HH:mm")
+      .tz(moment.tz.guess(), true)
+      .toDate();
+
+    console.log({ startTime: startTime.toISOString() });
     dispatch(
       setRentStartTime({
-        rentStartTime: startRentTime.toISOString(),
+        rentStartTime: startTime.toISOString(),
       })
     );
   };

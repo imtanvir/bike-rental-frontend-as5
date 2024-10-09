@@ -7,20 +7,35 @@ import {
 import { useMakeAdvancePaymentMutation } from "@/redux/features/payment/paymentApi";
 import { TUser } from "@/redux/features/profile/profileSlice";
 import { useStartTime } from "@/redux/features/rentTime/RentTimeSlice";
+import { useCreateTestimonialMutation } from "@/redux/features/testimonial/testimonialApi";
 import { TBike } from "@/types/intex";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useEffect, useRef, useState } from "react";
+import { CiStar } from "react-icons/ci";
+import { FaStar } from "react-icons/fa";
+import { IoMdClose } from "react-icons/io";
+import Rating from "react-rating";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogTitle,
+} from "./ui/alert-dialog";
+import { Button } from "./ui/button";
+import { Textarea } from "./ui/textarea";
 
 const Checkout = ({
   id,
   payAmount,
+  userId,
   bikeDetails,
   rentId = null,
 }: {
   id: string;
   payAmount: number;
+  userId: string | null;
   bikeDetails: TBike;
   rentId?: string | null;
 }) => {
@@ -31,17 +46,17 @@ const Checkout = ({
   const [rentABike] = useRentABikeMutation(undefined);
   const [rentPaidUpdate] = useRentPaidUpdateMutation();
   const [makePayment] = useMakeAdvancePaymentMutation(undefined);
+  const [createTestimonial] = useCreateTestimonialMutation();
   const [clientSecret, setClientSecret] = useState("");
   const [transactionId, setTransactionId] = useState("");
   const [processing, setProcessing] = useState(false);
   const user = useAppSelector(currentUser);
   const paymentRef = useRef(0);
   const navigate = useNavigate();
-
-  // useEffect(() =>{
-  //   if(!rentId && !bikeDetails){
-  //     navigate('/all-bikes')
-  // },[])
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [bikeRating, setBikeRating] = useState(0);
+  const [feedback, setFeedback] = useState("");
 
   useEffect(() => {
     if (bikeDetails?.isAvailable && startTime?.rentStartTime === null) {
@@ -65,6 +80,42 @@ const Checkout = ({
     if (err) {
       setErr("");
     }
+  };
+  const handleFeedback = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const { value } = e.target;
+    setFeedback(value);
+  };
+
+  const handleTestimonialSubmit = async () => {
+    setIsProcessing(true);
+    const toastId = toast.loading("Sending feedback...");
+    try {
+      const data = {
+        userId: userId,
+        bikeId: bikeDetails?._id,
+        message: feedback,
+        rating: bikeRating,
+      };
+      const response = await createTestimonial({
+        data,
+        bikeTotalRating: bikeDetails?.totalRating,
+      });
+      if (response?.data?.success === true) {
+        setIsProcessing(false);
+        toast.success("Thank you for your feedback", { id: toastId });
+        setTimeout(() => {
+          setIsDialogOpen(false);
+          navigate(`/${user?.role}/dashboard/rentals`);
+        }, 1000);
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      toast.error("Something went wrong", { id: toastId });
+    }
+  };
+
+  const handleClose = () => {
+    navigate(`/${user?.role}/dashboard/rentals`);
   };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -122,7 +173,9 @@ const Checkout = ({
               duration: 2000,
               className: "bg-green-500 text-white border-green-400",
             });
+
             setTimeout(() => {
+              setIsDialogOpen(false);
               navigate(`/${user?.role}/dashboard/rentals`);
             }, 2000);
           }
@@ -131,14 +184,12 @@ const Checkout = ({
           if (response?.data?.success) {
             setTransactionId(paymentIntent.id);
             setProcessing(false);
+            setIsDialogOpen(true);
             toast.success("Your payment was successful!", {
               id: toastId,
               duration: 2000,
               className: "bg-green-500 text-white border-green-400",
             });
-            setTimeout(() => {
-              navigate(`/${user?.role}/dashboard/rentals`);
-            }, 2000);
           }
         }
       }
@@ -170,7 +221,6 @@ const Checkout = ({
       },
     },
   };
-
   return (
     <>
       <form
@@ -187,7 +237,7 @@ const Checkout = ({
           Your card will be charged{" "}
           <span className="text-indigo-500">${payAmount}</span>
         </p>
-        <button
+        <Button
           type="submit"
           disabled={
             (!startTime?.rentStartTime && bikeDetails?.isAvailable) ||
@@ -236,8 +286,7 @@ const Checkout = ({
           )}
           {!transactionId && !processing && <>Pay</>}
           {!processing && transactionId && <>Payment Successful</>}
-        </button>
-
+        </Button>
         <p className="text-green-500">
           {transactionId && (
             <span>Your transaction id is: {transactionId}</span>
@@ -248,6 +297,68 @@ const Checkout = ({
           Power by <span className="text-indigo-500 font-thin">Stripe</span>
         </p>
       </form>
+      <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <AlertDialogContent className="flex flex-col  bg-indigo-600 ">
+          <div className="flex justify-end">
+            <AlertDialogCancel
+              onClick={handleClose}
+              className="w-10 h-10 p-0 flex"
+            >
+              <IoMdClose className="text-xl" />
+            </AlertDialogCancel>
+          </div>
+          <AlertDialogTitle>
+            <span className="md:text-3xl text-xl block bebas-neue-regular">
+              Your payment successfully Completed!
+            </span>
+            <span className="block">Charged Amount : ${payAmount}+vat</span>
+          </AlertDialogTitle>
+          <Textarea
+            className="text-slate-800 text-base bg-indigo-200 focus:ring-0 focus:ring-offset-0 focus:border-0 border-0 border-transparent outline-none"
+            placeholder="Share your ride experience with us."
+            name="feedback"
+            value={feedback}
+            onChange={handleFeedback}
+          />
+          <div className="flex justify-between">
+            <div className="flex gap-2 items-center flex-row box-content">
+              <span className="text-lg block">Rating</span>
+              {/* @ts-expect-error there is a version miss-match in the source */}
+              <Rating
+                emptySymbol={
+                  <CiStar className="text-white  text-lg md:text-2xl" />
+                }
+                fullSymbol={
+                  <FaStar className="text-[#f59e0b] text-lg md:text-2xl" />
+                }
+                initialRating={bikeRating}
+                start={0}
+                stop={5}
+                step={1}
+                fractions={2}
+                onChange={(bikeRating: number) => setBikeRating(bikeRating)}
+                readonly={false}
+                className="pt-2"
+              />{" "}
+              {bikeRating !== 0 ? (
+                <span className="font-semibold">
+                  {bikeRating}
+                  {" / "}5
+                </span>
+              ) : (
+                ""
+              )}
+            </div>
+            <Button
+              disabled={isProcessing}
+              onClick={handleTestimonialSubmit}
+              className="w-1/4 bg-blue-500 text-white hover:bg-blue-500/80"
+            >
+              {isProcessing ? "Processing..." : "Submit"}
+            </Button>
+          </div>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 };

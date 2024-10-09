@@ -18,6 +18,7 @@ import userRentals from "./features/booking/rentalSlice";
 import userCoupon from "./features/coupon/couponSlice";
 import profileReducer from "./features/profile/profileSlice";
 import rentStartTime from "./features/rentTime/RentTimeSlice";
+import allTestimonial from "./features/testimonial/testimonialSlice";
 import allUsers from "./features/users/usersSlice";
 const persistConfig = {
   key: "auth",
@@ -37,6 +38,7 @@ export const store = configureStore({
     rentals: userRentals,
     users: allUsers,
     coupon: userCoupon,
+    testimonials: allTestimonial,
   },
   middleware: (getDefaultMiddlewares) =>
     getDefaultMiddlewares({

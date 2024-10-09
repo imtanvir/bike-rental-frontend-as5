@@ -1,48 +1,62 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
+import { useGetAllTestimonialQuery } from "@/redux/features/testimonial/testimonialApi";
+import {
+  currentTestimonial,
+  setTestimonials,
+  TTestimonial,
+} from "@/redux/features/testimonial/testimonialSlice";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { FaStar } from "react-icons/fa";
 import Rating from "react-rating";
-import img from "../assets/react.svg";
 const CustomerTestimonials = () => {
-  const testimonials = [
-    {
-      quote: "The bikes were in great condition and the service was excellent!",
-      name: "Sarah L.",
-      avatar: img,
-    },
-    {
-      quote: "Exploring the city on these bikes was the highlight of our trip.",
-      name: "Mike T.",
-      avatar: img,
-    },
-    {
-      quote:
-        "Affordable prices and a wide selection of bikes. Highly recommend!",
-      name: "Emily R.",
-      avatar: "placeholder/img",
-    },
-    {
-      quote:
-        "The staff was incredibly helpful in choosing the right bike for me.",
-      name: "David K.",
-      avatar: img,
-    },
-    {
-      quote:
-        "Smooth rental process and the bikes were perfect for our family outing.",
-      name: "Lisa M.",
-      avatar: img,
-    },
-    {
-      quote:
-        "Great way to see the sights and get some exercise. Will rent again!",
-      name: "Chris P.",
-      avatar: img,
-    },
-  ];
+  const { data: testimonialsData, refetch } =
+    useGetAllTestimonialQuery(undefined);
+  const dispatch = useAppDispatch();
+  const testimonials = useAppSelector(currentTestimonial);
+  useEffect(() => {
+    dispatch(setTestimonials({ data: testimonialsData?.data }));
+    refetch();
+  }, [refetch, testimonialsData?.data]);
+  // const testimonials = [
+  //   {
+  //     quote: "The bikes were in great condition and the service was excellent!",
+  //     name: "Sarah L.",
+  //     avatar: img,
+  //   },
+  //   {
+  //     quote: "Exploring the city on these bikes was the highlight of our trip.",
+  //     name: "Mike T.",
+  //     avatar: img,
+  //   },
+  //   {
+  //     quote:
+  //       "Affordable prices and a wide selection of bikes. Highly recommend!",
+  //     name: "Emily R.",
+  //     avatar: "placeholder/img",
+  //   },
+  //   {
+  //     quote:
+  //       "The staff was incredibly helpful in choosing the right bike for me.",
+  //     name: "David K.",
+  //     avatar: img,
+  //   },
+  //   {
+  //     quote:
+  //       "Smooth rental process and the bikes were perfect for our family outing.",
+  //     name: "Lisa M.",
+  //     avatar: img,
+  //   },
+  //   {
+  //     quote:
+  //       "Great way to see the sights and get some exercise. Will rent again!",
+  //     name: "Chris P.",
+  //     avatar: img,
+  //   },
+  // ];
 
   const carouselRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -52,7 +66,7 @@ const CustomerTestimonials = () => {
   const scrollToIndex = (index: number) => {
     if (carouselRef.current) {
       const scrollWidth = carouselRef.current.scrollWidth;
-      const itemWidth = scrollWidth / testimonials.length;
+      const itemWidth = scrollWidth / testimonials!.length;
       carouselRef.current.scrollTo({
         left: itemWidth * index,
         behavior: "smooth",
@@ -62,13 +76,13 @@ const CustomerTestimonials = () => {
 
   const handlePrev = () => {
     const newIndex =
-      (currentIndex - 1 + testimonials.length) % testimonials.length;
+      (currentIndex - 1 + testimonials!.length) % testimonials!.length;
     setCurrentIndex(newIndex);
     scrollToIndex(newIndex);
   };
 
   const handleNext = () => {
-    const newIndex = (currentIndex + 1) % testimonials.length;
+    const newIndex = (currentIndex + 1) % testimonials!.length;
     setCurrentIndex(newIndex);
     scrollToIndex(newIndex);
   };
@@ -99,6 +113,7 @@ const CustomerTestimonials = () => {
     return () => clearInterval(interval);
   }, [currentIndex]);
 
+  console.log({ testimonials, testimonialsData });
   return (
     <>
       <section className="md:py-32 py-16 bg-gradient-to-b from-green-50 to-blue-50 dark:bg-gradient-to-b dark:from-background dark:to-muted">
@@ -115,54 +130,56 @@ const CustomerTestimonials = () => {
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
             >
-              {testimonials.map((testimonial) => (
-                <div
-                  key={testimonial.quote}
-                  className="w-full sm:w-1/2 lg:w-1/3 flex-shrink-0 snap-center px-2"
-                >
-                  <Card className="bg-white dark:bg-slate-800 h-full poppins-regular">
-                    <CardContent className="p-6 flex flex-col justify-between h-full">
-                      <blockquote className="text-md mb-4 dark:text-slate-300">
-                        "{testimonial.quote}"
-                      </blockquote>
-                      <div>
-                        {/* @ts-expect-error there is a version miss-match in the source */}
-                        <Rating
-                          fullSymbol={
-                            <FaStar className="text-[#f59e0b] text-lg" />
-                          }
-                          emptySymbol={
-                            <FaStar className="text-slate-400 mx-[.10rem] dark:text-slate-500 text-lg" />
-                          }
-                          initialRating={4}
-                          start={0}
-                          stop={5}
-                          step={1}
-                          fractions={2}
-                          readonly={true}
-                        />
-                      </div>
-                      <div className="flex items-center">
-                        <Avatar className="h-10 w-10 mr-4">
-                          <AvatarImage
-                            src={testimonial.avatar}
-                            alt={testimonial.name}
+              {testimonials &&
+                testimonials.length > 0 &&
+                testimonials.map((testimonial: TTestimonial) => (
+                  <div
+                    key={testimonial?._id}
+                    className="w-full sm:w-1/2 lg:w-1/3 flex-shrink-0 snap-center px-2"
+                  >
+                    <Card className="bg-white dark:bg-slate-800 h-full poppins-regular">
+                      <CardContent className="p-6 flex flex-col justify-between h-full">
+                        <blockquote className="text-md mb-4 dark:text-slate-300">
+                          "{testimonial.message}"
+                        </blockquote>
+                        <div>
+                          {/* @ts-expect-error there is a version miss-match in the source */}
+                          <Rating
+                            fullSymbol={
+                              <FaStar className="text-[#f59e0b] text-lg" />
+                            }
+                            emptySymbol={
+                              <FaStar className="text-slate-400 mx-[.10rem] dark:text-slate-500 text-lg" />
+                            }
+                            initialRating={testimonial.rating as number}
+                            start={0}
+                            stop={5}
+                            step={1}
+                            fractions={2}
+                            readonly={true}
                           />
-                          <AvatarFallback className=" dark:bg-slate-600 dark:text-slate-200">
-                            {testimonial.name
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className="font-semibold dark:text-slate-300">
-                          {testimonial.name}
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              ))}
+                        <div className="flex items-center">
+                          <Avatar className="h-10 w-10 mr-4">
+                            <AvatarImage
+                              src={testimonial?.userId?.image?.[0]?.url ?? ""}
+                              alt={testimonial!.userId?.name ?? ""}
+                            />
+                            <AvatarFallback className=" dark:bg-slate-600 dark:text-slate-200">
+                              {(testimonial?.userId?.name ?? "")
+                                .split(" ")
+                                .map((n) => n[0])
+                                .join("")}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="font-semibold dark:text-slate-300">
+                            {testimonial?.userId?.name}
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                ))}
             </div>
             <Button
               variant="outline"
@@ -184,7 +201,7 @@ const CustomerTestimonials = () => {
             </Button>
           </div>
           <div className="flex justify-center mt-4">
-            {testimonials.map((_, index) => (
+            {testimonials?.map((_, index) => (
               <Button
                 key={index}
                 variant="ghost"

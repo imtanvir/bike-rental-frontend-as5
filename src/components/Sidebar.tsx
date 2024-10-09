@@ -107,7 +107,6 @@ const Sidebar = ({ role }: { role: string }) => {
         <Button
           className="bg-indigo-600 w-full text-white hover:bg-indigo-700 dark:text-slate-100 "
           onClick={handleLogout}
-          // onClick={handleLogout}
         >
           Logout
         </Button>

@@ -45,14 +45,23 @@ const Payment = () => {
   const [couponSuccess, setCouponSuccess] = useState<string | null>(null);
   const [isError, setIsError] = useState<string | null>(null);
   const [isApplying, setIsApplying] = useState<boolean>(false);
+  const [isCouponUsed, setIsCouponUsed] = useState<boolean>(false);
   const user = useAppSelector(currentUser);
   const allCoupons = useAppSelector(currentCoupons);
-  const couponCheck = allCoupons?.find(
-    (coupon: TCoupon) => coupon.userId?._id === user?._id
-  );
+  const [couponCheck, setCouponCheck] = useState<TCoupon | null>(null);
+  // const couponCheck = allCoupons?.find(
+  //   (coupon: TCoupon) => coupon.userId?._id === user?._id
+  // );
   const [couponInput, setCouponInput] = useState<{ inputValue: string }>({
     inputValue: "",
   });
+
+  useEffect(() => {
+    const c = allCoupons?.find(
+      (coupon: TCoupon) => coupon.userId?._id === user?._id
+    );
+    setCouponCheck(c as TCoupon);
+  }, [allCoupons]);
 
   useEffect(() => {
     refetch();
@@ -141,7 +150,7 @@ const Payment = () => {
         const deleteUsedCoupon = await deleteCoupon(
           couponServerResponse?.data?.data[0]?._id
         );
-
+        setIsCouponUsed(true);
         if (deleteUsedCoupon?.data?.success === true) {
           setTotalCost(rentalUpdateRes?.data?.data?.totalCost);
           setCouponInput({ inputValue: "" });
@@ -238,7 +247,7 @@ const Payment = () => {
                             </Button>
                           </div>
                         </div>
-                        {couponCheck && couponCheck?.couponCode && (
+                        {!isCouponUsed && couponCheck?.couponCode && (
                           <p className="pt-2">
                             Use your {couponCheck?.discount}% coupon code:{" "}
                             <Badge
@@ -288,6 +297,7 @@ const Payment = () => {
                 payAmount={payAmount}
                 id={bikeData?._id as string}
                 bikeDetails={bikeData as TBike}
+                userId={user?._id as string}
                 rentId={
                   singleRentData?.rentDetails?._id
                     ? (singleRentData?.rentDetails._id as string)

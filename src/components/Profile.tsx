@@ -54,7 +54,14 @@ const Profile = () => {
     <>
       <div className="flex-1 p-10 space-y-6 overflow-y-auto poppins-regular">
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl">Profile Dashboard</h1>
+          <h1 className="text-3xl">
+            {(user as TUser).role === "admin"
+              ? "Admin"
+              : (user as TUser).role === "superAdmin"
+              ? "Super Admin"
+              : "User"}{" "}
+            Profile
+          </h1>
           <Button
             onClick={() => {
               setIsProcessing(false);
@@ -113,34 +120,36 @@ const Profile = () => {
           </Card>
 
           {/* Activity Summary Card */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Activity Summary</CardTitle>
-              <CardDescription>Your recent activities</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <span>Rented</span>
-                  <span className="font-semibold">
-                    {data?.data.length ?? "N/A"}
-                  </span>
+          {user && user?.role === "user" && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Activity Summary</CardTitle>
+                <CardDescription>Your recent activities</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span>Rented</span>
+                    <span className="font-semibold">
+                      {data?.data.length ?? "N/A"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Paid Rent</span>
+                    <span className="font-semibold">
+                      {paidStatus?.paid ?? "N/A"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Active Rent</span>
+                    <span className="font-semibold">
+                      {paidStatus?.unpaid ?? "N/A"}
+                    </span>
+                  </div>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span>Paid Rent</span>
-                  <span className="font-semibold">
-                    {paidStatus?.paid ?? "N/A"}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span>Active Rent</span>
-                  <span className="font-semibold">
-                    {paidStatus?.unpaid ?? "N/A"}
-                  </span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Account Statistics Card */}
           <Card>
@@ -161,42 +170,16 @@ const Profile = () => {
                 <div className="flex justify-between items-center">
                   <span>Profile Role</span>
                   <span className="font-semibold capitalize">
-                    {(user as TUser).role}
+                    {(user as TUser).role === "admin"
+                      ? "Admin"
+                      : (user as TUser).role === "superAdmin"
+                      ? "Super Admin"
+                      : "User"}
                   </span>
                 </div>
               </div>
             </CardContent>
           </Card>
-
-          {/* Recent Activity Card */}
-          {/* <Card>
-            <CardHeader>
-              <CardTitle>Recent Activity</CardTitle>
-              <CardDescription>Your latest actions</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <span>Updated profile picture</span>
-                  <span className="text-sm text-muted-foreground">
-                    2 days ago
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span>Posted a new article</span>
-                  <span className="text-sm text-muted-foreground">
-                    1 week ago
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span>Commented on a post</span>
-                  <span className="text-sm text-muted-foreground">
-                    2 weeks ago
-                  </span>
-                </div>
-              </div>
-            </CardContent>
-          </Card> */}
         </div>
       </div>
     </>
