@@ -144,7 +144,10 @@ const BikeCreate = ({
       setIsProcessing(false);
       setIsCreating(false);
     } else {
-      toast.error("Something went wrong", { id: toastId });
+      toast.error("Something went wrong", {
+        id: toastId,
+        className: "bg-red-500 text-white border-red-400",
+      });
     }
   };
 

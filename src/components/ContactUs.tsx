@@ -4,7 +4,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 // import { useSendFeedbackMutation } from "../../redux/api/baseApi";
 const ContactUs = () => {
-  const { register, handleSubmit } = useForm<{
+  const { register, handleSubmit, reset } = useForm<{
     email: string;
     message: string;
   }>();
@@ -20,8 +20,10 @@ const ContactUs = () => {
       };
       const response = await contactUs(feedback);
       if (response?.data?.success === true) {
+        reset();
         toast.success("Thank you for your feedback", { id: toastId });
       }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast.error("Something went wrong");
     }
@@ -61,6 +63,7 @@ const ContactUs = () => {
                 type="email"
                 id="email"
                 name="email"
+                placeholder="type your email ex:jhon@gmail.com"
                 className="w-full rounded border border-gray-300 bg-white dark:bg-slate-600 dark:text-slate-300 dark:border-slate-700 py-1 px-3 text-base leading-8 text-slate-500 outline-none transition-colors duration-200 ease-in-out focus:border-indigo-500 dark:focus:border-slate-500 focus:ring-2 focus:ring-indigo-200 dark:focus:ring-slate-500"
               />
             </div>
@@ -75,6 +78,7 @@ const ContactUs = () => {
                 {...register("message")}
                 id="message"
                 name="message"
+                placeholder="Share your feedback with us..."
                 className="h-32 w-full resize-none rounded border dark:bg-slate-600 border-gray-300 dark:border-slate-700 py-1 px-3 text-base leading-6 text-gray-700 dark:text-slate-300 outline-none transition-colors duration-200 ease-in-out focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 dark:focus:ring-slate-500"
               ></textarea>
             </div>

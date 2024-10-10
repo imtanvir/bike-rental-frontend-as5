@@ -49,9 +49,7 @@ const Payment = () => {
   const user = useAppSelector(currentUser);
   const allCoupons = useAppSelector(currentCoupons);
   const [couponCheck, setCouponCheck] = useState<TCoupon | null>(null);
-  // const couponCheck = allCoupons?.find(
-  //   (coupon: TCoupon) => coupon.userId?._id === user?._id
-  // );
+
   const [couponInput, setCouponInput] = useState<{ inputValue: string }>({
     inputValue: "",
   });

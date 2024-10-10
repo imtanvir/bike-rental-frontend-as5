@@ -91,6 +91,15 @@ const RentalCard = ({ rental }: { rental: TBooking }) => {
               <span className="font-semibold me-2">Total Cost:</span>
               {`${rental.totalCost === 0 ? ` N/A` : "$" + rental.totalCost}`}
             </p>
+            <span
+              className={`${
+                rental?.getBackAmount && rental?.getBackAmount > 0
+                  ? "block"
+                  : "hidden"
+              }`}
+            >
+              You Get Back: ${rental?.getBackAmount}
+            </span>
             <p>
               <span className="font-semibold text-black dark:text-slate-300">
                 Rent Status:

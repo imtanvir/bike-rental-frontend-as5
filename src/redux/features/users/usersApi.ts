@@ -9,6 +9,13 @@ const usersApi = baseApi.injectEndpoints({
       }),
     }),
 
+    getSingleUser: builder.query({
+      query: (id) => ({
+        url: `/users/single-user/${id}`,
+        method: "GET",
+        credentials: "include",
+      }),
+    }),
     updateUserByAdmin: builder.mutation({
       query: ({ id, data }) => ({
         url: `/admin/user/${id}`,
@@ -32,4 +39,5 @@ export const {
   useGetAllUserQuery,
   useUpdateUserByAdminMutation,
   useDeleteUserByAdminMutation,
+  useGetSingleUserQuery,
 } = usersApi;

@@ -10,10 +10,12 @@ import {
   setCoupons,
   TCoupon,
 } from "@/redux/features/coupon/couponSlice";
+import moment from "moment-timezone";
 import { useEffect, useRef, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import { Link } from "react-router-dom";
 import bikeWheel from "../assets/images/wheel.png";
+
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -93,12 +95,16 @@ const CouponWheel = () => {
           ((360 - normalizedRotation) / 360) * options.length
         );
         const discount = options[selectedIndex].value;
-        const createDate = new Date().toISOString();
-        const couponCode = new Date(createDate).getTime().toString();
+        const createTime = moment(new Date(), "HH:mm")
+          .tz(moment.tz.guess(), true)
+          .toDate();
+        const createCode = new Date().toISOString();
+
+        const couponCode = new Date(createCode).getTime().toString();
         const data = {
           couponCode,
           userId: user?._id as string,
-          createDate,
+          createDate: createTime.toISOString(),
           discount: parseInt(discount.slice(0, -1)),
           isUsed: false,
           isExpired: false,
@@ -121,7 +127,7 @@ const CouponWheel = () => {
   const handleCopy = (data: string) => {
     navigator.clipboard.writeText(data).then(() => {
       setCopied(true);
-      setTimeout(() => setCopied(false), 1500); // Hide tooltip after 1.5 seconds
+      setTimeout(() => setCopied(false), 1500);
     });
   };
 

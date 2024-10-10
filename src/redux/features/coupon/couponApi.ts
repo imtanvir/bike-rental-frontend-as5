@@ -33,6 +33,14 @@ const couponApi = baseApi.injectEndpoints({
         credentials: "include",
       }),
     }),
+    singleCouponUpdate: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `/coupon/${id}`,
+        method: "PUT",
+        body: data,
+        credentials: "include",
+      }),
+    }),
   }),
 });
 
@@ -41,4 +49,5 @@ export const {
   useGetCouponsQuery,
   useCheckAndUseCouponMutation,
   useDeleteCouponMutation,
+  useSingleCouponUpdateMutation,
 } = couponApi;

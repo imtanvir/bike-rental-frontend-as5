@@ -45,7 +45,6 @@ const BookingModal = ({
       .tz(moment.tz.guess(), true)
       .toDate();
 
-    console.log({ startTime: startTime.toISOString() });
     dispatch(
       setRentStartTime({
         rentStartTime: startTime.toISOString(),

@@ -113,7 +113,6 @@ const CustomerTestimonials = () => {
     return () => clearInterval(interval);
   }, [currentIndex]);
 
-  console.log({ testimonials, testimonialsData });
   return (
     <>
       <section className="md:py-32 py-16 bg-gradient-to-b from-green-50 to-blue-50 dark:bg-gradient-to-b dark:from-background dark:to-muted">

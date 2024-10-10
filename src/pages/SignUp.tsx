@@ -16,6 +16,8 @@ import { toast } from "sonner";
 const SignUp = () => {
   const navigate = useNavigate();
   const [signUp] = useSignUpMutation();
+
+  const [isError, setIsError] = useState<string | null>(null);
   const [userData, setUserData] = useState({
     name: "",
     email: "",
@@ -55,8 +57,18 @@ const SignUp = () => {
   };
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    setIsError(null);
     const toastId = toast.loading("Signing up");
+    if (userData.password !== userData.confirmPassword) {
+      setIsError("Passwords do not match with confirm password!");
+
+      toast.error("Passwords do not match", {
+        id: toastId,
+        duration: 2000,
+        className: "bg-red-500 text-white border-red-400",
+      });
+      return;
+    }
 
     try {
       const submissionData = new FormData();
@@ -191,6 +203,13 @@ const SignUp = () => {
                 type="password"
                 placeholder="confirm your password"
               />
+              <p
+                className={`text-sm ${
+                  isError ? "block" : "hidden"
+                } text-red-500 `}
+              >
+                {isError ?? ""}
+              </p>
             </div>
 
             <Button type="submit" className="w-full">

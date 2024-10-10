@@ -103,7 +103,7 @@ const BikeDetails = () => {
             <CardTitle className="text-3xl font-bold flex justify-between items-center">
               <p>{bike?.data?.name}</p>
               <Link
-                to={"/"}
+                to={"/all-bike"}
                 className="flex gap-2 text-base text-slate-300 poppins-regular items-center rounded bg-indigo-700 p-2"
               >
                 back

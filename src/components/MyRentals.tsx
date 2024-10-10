@@ -12,7 +12,7 @@ const MyRentals = () => {
   useEffect(() => {
     refetch();
   }, [refetch]);
-  console.log({ data });
+
   const unpaidRental = data?.data?.filter(
     (rental: TBooking) => rental.isPaid === false
   );
