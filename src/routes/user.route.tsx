@@ -2,6 +2,7 @@ import MyRentals from "@/components/MyRentals";
 import Profile from "@/components/Profile";
 import ProtectedRoute from "@/layout/ProtectedRoute";
 import AllBikes from "@/pages/AllBikes";
+import MyCoupon from "@/pages/MyCoupon";
 import UserProfileDashboard from "@/pages/UserDashboard";
 
 export const userPath = [
@@ -32,7 +33,7 @@ export const userPath = [
       {
         name: "My Coupons",
         path: "coupons",
-        element: <>hi</>,
+        element: <MyCoupon />,
       },
     ],
   },

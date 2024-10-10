@@ -6,7 +6,13 @@ import {
 } from "@/components/ui/tooltip";
 import { useState } from "react";
 
-const CopyIdFunc = ({ selectedId }: { selectedId: string }) => {
+const CopyIdFunc = ({
+  selectedId,
+  paramsText,
+}: {
+  selectedId: string;
+  paramsText: string;
+}) => {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = (data: string) => {
@@ -52,7 +58,7 @@ const CopyIdFunc = ({ selectedId }: { selectedId: string }) => {
                 </svg>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Copy User ID!</p>
+                <p>{`Copy ${paramsText}!`}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>

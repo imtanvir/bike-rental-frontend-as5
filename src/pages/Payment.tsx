@@ -174,7 +174,7 @@ const Payment = () => {
   return (
     <>
       <section className=" dark:bg-gradient-to-b dark:from-background dark:to-muted bg-slate-50 bg-gradient-to-b from-green-50 to-blue-50">
-        <div className="container py-32 mx-auto">
+        <div className="container md:py-32 py-16 mx-auto">
           <h1 className="text-left md:text-6xl text-4xl bebas-neue-regular py-5">
             {bikeData?.isAvailable
               ? "Let's Advance to confirm your booking"

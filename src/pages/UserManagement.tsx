@@ -236,7 +236,10 @@ const UserManagement = () => {
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger asChild>
-                                <CopyIdFunc selectedId={item?._id as string} />
+                                <CopyIdFunc
+                                  paramsText={"User ID"}
+                                  selectedId={item?._id as string}
+                                />
                               </TooltipTrigger>
                               <TooltipContent>
                                 <p>Copy User ID!</p>
