@@ -12,6 +12,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { FaStar } from "react-icons/fa";
 import Rating from "react-rating";
+import NoDataAvailable from "./NoDataAvailable";
 const CustomerTestimonials = () => {
   const { data: testimonialsData, refetch } =
     useGetAllTestimonialQuery(undefined);
@@ -66,7 +67,7 @@ const CustomerTestimonials = () => {
   const scrollToIndex = (index: number) => {
     if (carouselRef.current) {
       const scrollWidth = carouselRef.current.scrollWidth;
-      const itemWidth = scrollWidth / testimonials!.length;
+      const itemWidth = scrollWidth / (testimonials! && testimonials?.length);
       carouselRef.current.scrollTo({
         left: itemWidth * index,
         behavior: "smooth",
@@ -82,7 +83,8 @@ const CustomerTestimonials = () => {
   };
 
   const handleNext = () => {
-    const newIndex = (currentIndex + 1) % testimonials!.length;
+    const newIndex =
+      (currentIndex + 1) % (testimonials! && testimonials?.length);
     setCurrentIndex(newIndex);
     scrollToIndex(newIndex);
   };
@@ -179,25 +181,34 @@ const CustomerTestimonials = () => {
                     </Card>
                   </div>
                 ))}
+              {testimonials && testimonials.length === 0 && (
+                <div className="py-5">
+                  <NoDataAvailable />
+                </div>
+              )}
             </div>
-            <Button
-              variant="outline"
-              size="icon"
-              className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white dark:bg-slate-500 dark:hover:bg-slate-600 hidden sm:flex"
-              onClick={handlePrev}
-            >
-              <ChevronLeft className="h-4 w-4" />
-              <span className="sr-only">Previous testimonial</span>
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white dark:bg-slate-500 dark:hover:bg-slate-600 hidden sm:flex"
-              onClick={handleNext}
-            >
-              <ChevronRight className="h-4 w-4" />
-              <span className="sr-only">Next testimonial</span>
-            </Button>
+            {testimonials && testimonials.length !== 0 && (
+              <>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white dark:bg-slate-500 dark:hover:bg-slate-600 hidden sm:flex"
+                  onClick={handlePrev}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                  <span className="sr-only">Previous testimonial</span>
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white dark:bg-slate-500 dark:hover:bg-slate-600 hidden sm:flex"
+                  onClick={handleNext}
+                >
+                  <ChevronRight className="h-4 w-4" />
+                  <span className="sr-only">Next testimonial</span>
+                </Button>
+              </>
+            )}
           </div>
           <div className="flex justify-center mt-4">
             {testimonials?.map((_, index) => (

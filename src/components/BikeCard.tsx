@@ -6,6 +6,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { ratingAverageCalculate } from "@/utils/ratingAverageCalculate";
+import { Star } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const BikeCard = ({
@@ -13,12 +15,15 @@ const BikeCard = ({
   image,
   brand,
   model,
+  rating,
 }: {
   id: string;
   image: string;
   brand: string;
   model: string;
+  rating: number[];
 }) => {
+  const averageRating = ratingAverageCalculate(rating);
   return (
     <>
       <Card
@@ -39,6 +44,19 @@ const BikeCard = ({
             {brand}
           </CardTitle>
           <p className="text-sm text-gray-600 dark:text-gray-500">{model}</p>
+          <div className="flex">
+            {[...Array(5)].map((_, i) => (
+              <Star
+                key={i}
+                className={`md:w-4 w-3 md:h-4 h-3 ${
+                  i < Math.floor(averageRating ?? 0)
+                    ? "text-yellow-400 fill-current"
+                    : "text-slate-500 fill-slate-500"
+                }`}
+              />
+            ))}
+            <span className="font-normal text-sm ps-2">{`(${averageRating})`}</span>
+          </div>
         </CardContent>
         <CardFooter className="p-4 pt-0">
           <Link to={`/bike-details/${id}`} className="w-full">

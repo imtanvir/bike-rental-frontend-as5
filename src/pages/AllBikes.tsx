@@ -157,6 +157,7 @@ const AllBikes = () => {
                     image={bike.image?.[0]?.url ?? "placeholder_image"}
                     brand={bike.brand}
                     model={bike.model}
+                    rating={bike.rating}
                   />
                 ))}
               </div>

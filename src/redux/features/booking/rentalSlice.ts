@@ -17,6 +17,7 @@ export type TBooking = {
   isPaid: boolean | null;
   discountApplied: boolean | null;
   getBackAmount: number | null;
+  feedBackSubmitted: boolean | null;
 };
 const initialState: { rentals: TBooking[] | null } = {
   rentals: null,

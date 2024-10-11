@@ -1,23 +1,33 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+import { useAppSelector } from "@/hooks/hooks";
+import { currentUser } from "@/redux/features/auth/authSlice";
 import { useGetRentalsQuery } from "@/redux/features/booking/bookingApi";
 import { TBooking } from "@/redux/features/booking/rentalSlice";
-import { useEffect } from "react";
+import { MutableRefObject, useEffect, useRef } from "react";
 import NoDataAvailable from "./NoDataAvailable";
 import RentalCard from "./RentalCard";
 // Mock data for rentals
 
 const MyRentals = () => {
   const { data, refetch } = useGetRentalsQuery(undefined);
+  const user = useAppSelector(currentUser);
+  const reviewRef: MutableRefObject<number> = useRef(0);
+
   useEffect(() => {
     refetch();
-  }, [refetch]);
-
-  const unpaidRental = data?.data?.filter(
+    if (reviewRef.current > 0) {
+      refetch();
+    }
+  }, [refetch, reviewRef]);
+  const userRentals = data?.data?.filter(
+    (rental: TBooking) => rental.userId?._id === user?._id
+  );
+  const unpaidRental = userRentals?.filter(
     (rental: TBooking) => rental.isPaid === false
   );
 
-  const paidRental = data?.data?.filter((rental: TBooking) => rental.isPaid);
+  const paidRental = userRentals?.filter((rental: TBooking) => rental.isPaid);
   return (
     <div className="container mx-auto px-4 py-8 overflow-auto poppins-regular ">
       <Tabs defaultValue="unpaid" className="space-y-4">
@@ -28,10 +38,14 @@ const MyRentals = () => {
         </TabsList>
         <TabsContent key={"unpaid"} value="unpaid">
           {unpaidRental && unpaidRental?.length > 0 ? (
-            data?.data
+            userRentals
               ?.filter((rental: TBooking) => rental.isPaid === false)
               .map((rental: TBooking) => (
-                <RentalCard key={rental._id} rental={rental} />
+                <RentalCard
+                  key={rental._id}
+                  reviewRef={reviewRef}
+                  rental={rental}
+                />
               ))
           ) : (
             <NoDataAvailable />
@@ -39,10 +53,14 @@ const MyRentals = () => {
         </TabsContent>
         <TabsContent key={"paid"} value="paid">
           {paidRental && paidRental?.length > 0 ? (
-            data?.data
+            userRentals
               ?.filter((rental: TBooking) => rental.isPaid)
               .map((rental: TBooking) => (
-                <RentalCard key={rental._id} rental={rental} />
+                <RentalCard
+                  key={rental._id}
+                  reviewRef={reviewRef}
+                  rental={rental}
+                />
               ))
           ) : (
             <NoDataAvailable />

@@ -26,7 +26,7 @@ const BookingModal = ({
   const dispatch = useAppDispatch();
   const [isTimePickerOpen, setIsTimePickerOpen] = useState(false);
   const [selectedTime, setSelectedTime] = useState(() =>
-    moment().format("hh:mm a")
+    moment().format("hh:mm")
   );
 
   const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {

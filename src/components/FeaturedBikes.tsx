@@ -4,22 +4,28 @@ import { useGetAllBikesQuery } from "@/redux/features/bike/bikeApi";
 import { bikeCurrentBikes, setBikes } from "@/redux/features/bike/bikeSlice";
 import { TBike } from "@/types/intex";
 import { ChevronRight } from "lucide-react";
-import { useEffect } from "react";
-import { FaBiking } from "react-icons/fa";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import BikeCard from "./BikeCard";
 import BikeSkeleton from "./BikeSkeleton";
+import NoDataAvailable from "./NoDataAvailable";
 const FeaturedBikes = () => {
   // get bike data from bike api
+  const [isLoading, setIsLoading] = useState(true);
   const dispatch = useAppDispatch();
   const { data } = useGetAllBikesQuery(undefined);
+
   useEffect(() => {
     if (data) {
       dispatch(setBikes({ data: data.data }));
+      setIsLoading(false);
     }
   }, [data, dispatch]);
 
   const bikeData = useAppSelector(bikeCurrentBikes);
+  const bikeDataFiltered = bikeData?.filter(
+    (bike) => bike?.isAvailable === true
+  );
 
   return (
     <>
@@ -30,38 +36,25 @@ const FeaturedBikes = () => {
             Top Picks: Featured Bikes
           </h1>
           <div className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-            {bikeData ? (
-              bikeData?.length !== 0 ? (
-                bikeData
-                  ?.slice(0, 10)
-                  .map((bike: TBike) => (
-                    <BikeCard
-                      key={bike._id}
-                      id={bike._id}
-                      image={bike.image?.[0]?.url ?? "placeholder_image"}
-                      brand={bike.brand}
-                      model={bike.model}
-                    />
-                  ))
-              ) : (
-                [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((skeleton) => (
-                  <BikeSkeleton key={skeleton} />
+            {isLoading ? (
+              Array.from({ length: 10 }).map((_, index) => (
+                <BikeSkeleton key={index} />
+              ))
+            ) : bikeDataFiltered && bikeDataFiltered.length !== 0 ? (
+              bikeDataFiltered
+                .slice(0, 10)
+                .map((bike: TBike) => (
+                  <BikeCard
+                    key={bike._id}
+                    id={bike._id}
+                    image={bike.image?.[0]?.url ?? "placeholder_image"}
+                    brand={bike.brand}
+                    model={bike.model}
+                    rating={bike.rating}
+                  />
                 ))
-              )
             ) : (
-              <>
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center py-5 bebas-neue-regular flex justify-center items-end dark:text-slate-300 gap-3">
-                  <p className="md:text-3xl text-xl">
-                    No bike data available...
-                  </p>
-                  <div className=" gap-4 flex items-center justify-center transition-transform">
-                    <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-r-2 border-blue-500"></div>
-                    <p>
-                      <FaBiking className="text-blue-500 text-5xl -skew-x-12" />
-                    </p>
-                  </div>
-                </div>
-              </>
+              <NoDataAvailable />
             )}
           </div>
           <div className="flex justify-center pt-6">

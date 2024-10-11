@@ -37,7 +37,6 @@ const BikeEditForm = ({
     name: bike.name,
     description: bike.description,
     pricePerHour: bike.pricePerHour,
-    rating: bike.rating,
     isAvailable: bike.isAvailable,
     cc: bike.cc,
     year: bike.year,
@@ -76,7 +75,6 @@ const BikeEditForm = ({
       name === "phone" ||
       name === "cc" ||
       name === "year" ||
-      name === "rating" ||
       name === "pricePerHour"
     ) {
       const numericValue = value.replace(/\D/g, "");
@@ -135,7 +133,6 @@ const BikeEditForm = ({
       ),
       description: bikeData.description,
       pricePerHour: bikeData.pricePerHour,
-      rating: bikeData.rating,
       isAvailable: bikeData.isAvailable,
       cc: bikeData.cc,
       year: bikeData.year,
@@ -345,16 +342,6 @@ const BikeEditForm = ({
               id="frameSize"
               name="frameSize"
               value={bikeData.frameSize}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="rating">Rating</Label>
-            <Input
-              className="dark:bg-slate-900"
-              id="rating"
-              name="rating"
-              value={bikeData.rating}
               onChange={handleInputChange}
             />
           </div>

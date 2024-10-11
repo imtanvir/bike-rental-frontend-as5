@@ -22,6 +22,9 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
+  const userRentals = data?.data?.filter(
+    (rental: TBooking) => rental.userId?._id === user?._id
+  );
   useEffect(() => {
     if (refetch) {
       refetch();
@@ -38,7 +41,7 @@ const Profile = () => {
     paid: 0,
     unpaid: 0,
   };
-  const paidStatus = data?.data?.reduce(
+  const paidStatus = userRentals?.reduce(
     (acc: typeof rentStatus, obj: TBooking) => {
       if (obj.isPaid) {
         acc.paid += 1;
@@ -131,7 +134,7 @@ const Profile = () => {
                   <div className="flex justify-between items-center">
                     <span>Rented</span>
                     <span className="font-semibold">
-                      {data?.data.length ?? "N/A"}
+                      {userRentals?.length ?? "N/A"}
                     </span>
                   </div>
                   <div className="flex justify-between items-center">

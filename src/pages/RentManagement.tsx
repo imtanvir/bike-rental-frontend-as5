@@ -1,6 +1,7 @@
 import {
   AlertDialogCancel,
   AlertDialogContent,
+  AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { IoMdClose } from "react-icons/io";
@@ -43,7 +44,9 @@ const RentManagement = () => {
   const { data, refetch } = useGetAllRentalsQuery(undefined);
   const [rentalCalculation] = useRentCalculationMutation();
   const allRental = useAppSelector(currentUserRentals);
-
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [totalCost, setTotalCost] = useState(0);
+  const [getMoneyBack, setGetMoneyBack] = useState(0);
   useEffect(() => {
     if (data?.data) {
       dispatch(setRentals({ data: data?.data }));
@@ -80,11 +83,12 @@ const RentManagement = () => {
     const checked = "checked" in target ? target.checked : null;
     setFilters((prevFilters) => ({
       ...prevFilters,
-      // [name]: type === "checkbox" ? checked : value,
       [name]: checked,
     }));
   };
-
+  const handleClose = () => {
+    setIsDialogOpen(false);
+  };
   return (
     <section className="container mx-auto">
       <div className="px-2">
@@ -177,6 +181,9 @@ const RentManagement = () => {
                     Exact Return
                   </TableHead>
                   <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4 box-border">
+                    Total Cost
+                  </TableHead>
+                  <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4 box-border">
                     Status
                   </TableHead>
                   <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4 box-border">
@@ -234,6 +241,9 @@ const RentManagement = () => {
                           : "N/A"}
                       </TableCell>
                       <TableCell className="md:flex-1 flex-auto text-center">
+                        {totalCost === 0 ? "N/A" : totalCost}
+                      </TableCell>
+                      <TableCell className="md:flex-1 flex-auto text-center">
                         {item.isPaid ? (
                           <Badge className="bg-green-500 hover:bg-green-500 text-white dark:text-slate-900">
                             Paid
@@ -260,6 +270,9 @@ const RentManagement = () => {
                             setRentals={setRentals}
                             rentalCalculation={rentalCalculation}
                             allRental={allRental as TBooking[]}
+                            setIsDialogOpen={setIsDialogOpen}
+                            setTotalCost={setTotalCost}
+                            setGetMoneyBack={setGetMoneyBack}
                           />
                         ) : item.pendingCalculation === false &&
                           !item.estimatedReturnTime?.toString() ? (
@@ -283,6 +296,38 @@ const RentManagement = () => {
         </div>
       </div>
       {filteredRental?.length === 0 && <NoDataAvailable />}
+      <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <AlertDialogContent className="flex flex-col  bg-indigo-600 ">
+          <div className="flex justify-end">
+            <AlertDialogCancel
+              onClick={handleClose}
+              className="w-10 h-10 p-0 flex"
+            >
+              <IoMdClose className="text-xl" />
+            </AlertDialogCancel>
+          </div>
+          <AlertDialogTitle>
+            <span className="text-2xl p-bold">Rant Paid!</span>
+            <span className="text-base block poppins-regular pb-4">
+              The rent has been successfully paid as the total cost less than
+              advance payment.
+            </span>
+            <div className="flex flex-row gap-2">
+              <span className="block">
+                <span className="text-yellow-400">Charged Amount :</span> $
+                {totalCost}
+              </span>
+              <span>{" | "}</span>
+              <span className="block">
+                <span className="text-yellow-400">Money Back :</span> $
+                {getMoneyBack}
+              </span>
+            </div>
+          </AlertDialogTitle>
+
+          <div className="flex justify-between"></div>
+        </AlertDialogContent>
+      </AlertDialog>
     </section>
   );
 };

@@ -9,7 +9,7 @@ export type TBike = {
   name: string;
   description: string;
   pricePerHour: number;
-  rating: number;
+  rating: number[];
   totalRating: number;
   isAvailable: boolean;
   cc: number;

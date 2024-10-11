@@ -30,7 +30,6 @@ const BikeCreate = ({
     name: "",
     description: "",
     pricePerHour: 0,
-    rating: 0,
     isAvailable: false,
     cc: 0,
     year: new Date().getFullYear(),
@@ -65,8 +64,7 @@ const BikeCreate = ({
       name === "phone" ||
       name === "cc" ||
       name === "pricePerHour" ||
-      name === "year" ||
-      name === "rating"
+      name === "year"
     ) {
       const numericValue = value.replace(/\D/g, "");
       setBikeData((prevUser) => ({
@@ -110,7 +108,6 @@ const BikeCreate = ({
       name: bikeData.name,
       description: bikeData.description,
       pricePerHour: bikeData.pricePerHour,
-      rating: bikeData.rating,
       isAvailable: bikeData.isAvailable,
       cc: bikeData.cc,
       year: bikeData.year,
@@ -287,17 +284,6 @@ const BikeCreate = ({
               value={bikeData.frameSize}
               onChange={handleInputChange}
               placeholder="Enter frame size"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="rating">Rating</Label>
-            <Input
-              className="dark:bg-slate-950"
-              id="rating"
-              name="rating"
-              value={bikeData.rating}
-              onChange={handleInputChange}
-              placeholder="Enter bike rating"
             />
           </div>
           <div className="space-y-2">

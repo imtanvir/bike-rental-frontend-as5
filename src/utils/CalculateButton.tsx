@@ -9,11 +9,17 @@ const CalculateButton = ({
   setRentals,
   rentalCalculation,
   allRental,
+  setIsDialogOpen,
+  setTotalCost,
+  setGetMoneyBack,
 }: {
   item: TBooking;
   setRentals: any;
   rentalCalculation: any;
   allRental: TBooking[];
+  setTotalCost: (value: number) => void;
+  setGetMoneyBack: (value: number) => void;
+  setIsDialogOpen: (value: boolean) => void;
 }) => {
   const dispatch = useAppDispatch();
   const [isCalculating, setIsCalculating] = useState(false);
@@ -25,8 +31,13 @@ const CalculateButton = ({
       const response = await rentalCalculation(id);
       if (response.data.success === true) {
         setIsCalculating(false);
-        const filterRentals = allRental?.filter((rental) => rental._id !== id);
 
+        const filterRentals = allRental?.filter((rental) => rental._id !== id);
+        setTotalCost(response?.data?.data?.totalCost);
+        setGetMoneyBack(response?.data?.data?.getBackAmount);
+        if (response?.data?.data?.isPaid) {
+          setIsDialogOpen(true);
+        }
         dispatch(
           setRentals({ data: [...filterRentals!, response?.data?.data] })
         );

@@ -83,7 +83,9 @@ const Checkout = ({
   };
   const handleFeedback = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { value } = e.target;
-    setFeedback(value);
+    if (value.length <= 200) {
+      setFeedback(value);
+    }
   };
 
   const handleTestimonialSubmit = async () => {
@@ -99,6 +101,7 @@ const Checkout = ({
       const response = await createTestimonial({
         data,
         bikeTotalRating: bikeDetails?.totalRating,
+        rentalId: rentId,
       });
       if (response?.data?.success === true) {
         setIsProcessing(false);
@@ -320,6 +323,9 @@ const Checkout = ({
             value={feedback}
             onChange={handleFeedback}
           />
+          <span className="text-slate-800 text-sm">
+            Write within 200 characters.
+          </span>
           <div className="flex justify-between">
             <div className="flex gap-2 items-center flex-row box-content">
               <span className="text-lg block">Rating</span>
