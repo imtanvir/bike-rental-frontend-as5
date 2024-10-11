@@ -59,7 +59,8 @@ const Payment = () => {
       (coupon: TCoupon) => coupon.userId?._id === user?._id
     );
     setCouponCheck(c as TCoupon);
-  }, [allCoupons]);
+    refetch();
+  }, [allCoupons, data, refetch]);
 
   useEffect(() => {
     refetch();
@@ -198,13 +199,6 @@ const Payment = () => {
                   </p>
                 </div>
                 <div className="px-6 pt-4 pb-2">
-                  <h2 className="py-2 dark:text-slate-300">
-                    {`${
-                      bikeData?.isAvailable
-                        ? "Advance payment amount $100"
-                        : `Total payment Amount $${singleRentData?.rentDetails?.totalCost}`
-                    }`}
-                  </h2>
                   <h3 className=" poppins-regular dark:text-slate-300">
                     {singleRentData?.rentDetails && !bikeData.isAvailable
                       ? "Total Cost:"
@@ -216,6 +210,22 @@ const Payment = () => {
                         : bikeData?.pricePerHour + " /hr"}
                     </span>
                   </h3>
+                  <h2 className="py-2 dark:text-slate-300 font-semibold md:text-xl text-xl">
+                    {bikeData?.isAvailable && (
+                      <span>
+                        Advance payment amount{" "}
+                        <span className="bebas-neue-regular text-2xl text-indigo-600">
+                          ${payAmount}
+                        </span>
+                      </span>
+                    )}
+                    {!bikeData?.isAvailable && (
+                      <span>
+                        Total payment Amount $
+                        {singleRentData?.rentDetails?.totalCost}
+                      </span>
+                    )}
+                  </h2>
                   {singleRentData?.rentDetails && (
                     <div>
                       <form

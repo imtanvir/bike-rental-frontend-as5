@@ -102,7 +102,10 @@ const Navbar = () => {
                   </Button>
                 </DropdownMenuTrigger>
 
-                <DropdownMenuContent align="end">
+                <DropdownMenuContent align="end" className="w-[100vw] py-4">
+                  <DropdownMenuItem>
+                    <ModeToggle />
+                  </DropdownMenuItem>
                   <DropdownMenuItem>
                     <Link to={"/"}>Home</Link>
                   </DropdownMenuItem>
@@ -120,15 +123,21 @@ const Navbar = () => {
                     <Link to={"/about-us"}>About Us</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
-                    <Button
-                      className="dark:bg-indigo-800 dark:text-white dark:hover:bg-indigo-700"
-                      onClick={handleLogout}
-                    >
-                      Logout
-                    </Button>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <ModeToggle />
+                    {token ? (
+                      <Button
+                        className="md:w-auto w-full inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm  ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 bg-indigo-800 text-white hover:bg-indigo-700"
+                        onClick={handleLogout}
+                      >
+                        Logout
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={() => navigate("/login")}
+                        className="md:w-auto w-full inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm  ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 bg-indigo-800 text-white hover:bg-indigo-700"
+                      >
+                        Login
+                      </Button>
+                    )}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

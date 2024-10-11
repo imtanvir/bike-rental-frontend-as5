@@ -232,7 +232,7 @@ const Checkout = ({
       >
         <CardElement
           onChange={handleErr}
-          className="  dark:bg-gray-800/20 backdrop-blur-md border border-white/30 dark:border-gray-700/30 shadow-lg rounded-lg p-6"
+          className="  dark:bg-gray-800/20 text-slate-900 backdrop-blur-md border border-white/30 dark:border-gray-700/30 shadow-lg rounded-lg p-6"
           options={options}
         />
         <p className="text-red-500">{err}</p>

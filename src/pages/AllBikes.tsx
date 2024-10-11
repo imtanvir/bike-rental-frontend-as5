@@ -6,13 +6,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { useGetAllBikesQuery } from "@/redux/features/bike/bikeApi";
 import { bikeCurrentBikes, setBikes } from "@/redux/features/bike/bikeSlice";
 import { TBike } from "@/types/intex";
-import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
 
 const AllBikes = () => {
@@ -79,10 +77,6 @@ const AllBikes = () => {
                   className=" dark:bg-slate-800 dark:text-slate-300"
                 />
               </div>
-              <Button className="dark:bg-indigo-800 dark:text-slate-300">
-                <Search className="h-4 w-4 mr-2" />
-                Search
-              </Button>
             </div>
             <div className=" bg-indigo-50 dark:bg-slate-800 p-4 shadow flex justify-between gap-2">
               <Accordion type="single" collapsible className="w-full">

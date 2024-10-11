@@ -12,6 +12,7 @@ import { useAppDispatch } from "@/hooks/hooks";
 import { useLoginMutation } from "@/redux/features/auth/authAPi";
 import { setUser } from "@/redux/features/auth/authSlice";
 import { TUser } from "@/redux/features/profile/profileSlice";
+import { TError } from "@/types/intex";
 import { verifyToken } from "@/utils/verifyToken";
 import { FieldValues } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
@@ -36,14 +37,26 @@ const Login = () => {
 
       toast.success("Logged in", { id: toastId, duration: 2000 });
       navigate("/");
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      toast.error("Something went wrong!", { id: toastId, duration: 2000 });
+      const errorAsTError = error as TError;
+      if (
+        errorAsTError.status === 401 ||
+        errorAsTError.status === 404 ||
+        errorAsTError.status
+      ) {
+        toast.error(errorAsTError.data?.message, {
+          id: toastId,
+          duration: 2000,
+          className: "bg-red-500 text-white border-red-400",
+        });
+      } else {
+        toast.error("Something went wrong!", { id: toastId, duration: 2000 });
+      }
     }
   };
   return (
-    <section className="md:py-32 py-16 dark:bg-gradient-to-b dark:from-background dark:to-muted bg-slate-50">
-      <Card className="mx-auto max-w-sm mt-24 shadow-lg">
+    <section className="md:py-32 flex items-center  md:h-auto h-[70vh] py-16 dark:bg-gradient-to-b dark:from-background dark:to-muted bg-slate-50">
+      <Card className="mx-auto max-w-sm md:mt-24 shadow-lg">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold">Login</CardTitle>
           <CardDescription>
@@ -70,7 +83,10 @@ const Login = () => {
                 />
               </div>
 
-              <Button type="submit" className="w-full">
+              <Button
+                type="submit"
+                className="w-full inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm  ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 bg-indigo-800 text-white hover:bg-indigo-700"
+              >
                 Login
               </Button>
               <div className="space-y-2">

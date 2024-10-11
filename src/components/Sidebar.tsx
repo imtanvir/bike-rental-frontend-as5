@@ -20,9 +20,9 @@ const Sidebar = ({ role }: { role: string }) => {
     icon: React.ReactNode;
     children: React.ReactNode;
   }) => (
-    <div className="flex items-center space-x-2 text-muted-foreground hover:text-primary cursor-pointer">
+    <div className="flex items-center space-x-2 flex-nowrap text-muted-foreground hover:text-primary cursor-pointer">
       {icon}
-      <span>{children}</span>
+      <span className="whitespace-nowrap">{children}</span>
     </div>
   );
 

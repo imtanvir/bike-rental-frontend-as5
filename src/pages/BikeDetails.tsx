@@ -1,5 +1,12 @@
 import BookingModal from "@/components/BookingModal";
 import NoDataAvailable from "@/components/NoDataAvailable";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +26,7 @@ import { jwtDecode } from "jwt-decode";
 import { Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
+import { IoMdClose } from "react-icons/io";
 import { Link, Navigate, useParams } from "react-router-dom";
 
 const BikeDetails = () => {
@@ -203,26 +211,65 @@ const BikeDetails = () => {
               </div>
             </div>
           </CardContent>
-          <CardFooter className={`${user?.role !== "user" ? "hidden" : ""}`}>
-            <Dialog open={isMainOpen} onOpenChange={setIsMainOpen}>
-              <DialogTrigger asChild>
-                <Button
-                  className={`${
-                    !bike?.data?.isAvailable
-                      ? "cursor-not-allowed dark:bg-slate-700"
-                      : ""
-                  } w-full text-lg py-6 bg-indigo-800 text-white hover:bg-indigo-700 dark:text-slate-200`}
-                  disabled={!bike?.data?.isAvailable}
-                  onClick={() => handleAuth()}
-                >
-                  Book Now
-                </Button>
-              </DialogTrigger>
-              <BookingModal
-                bikeId={bike?.data?._id}
-                setIsMainOpen={setIsMainOpen}
-              />
-            </Dialog>
+          <CardFooter
+            className={`${
+              user?.role === "superAdmin" || user?.role === "admin"
+                ? "hidden"
+                : ""
+            }`}
+          >
+            {user?.role === "user" && (
+              <Dialog open={isMainOpen} onOpenChange={setIsMainOpen}>
+                <DialogTrigger asChild>
+                  <Button
+                    className={`${
+                      !bike?.data?.isAvailable
+                        ? "cursor-not-allowed dark:bg-slate-700"
+                        : ""
+                    } w-full text-lg py-6 bg-indigo-800 text-white hover:bg-indigo-700 dark:text-slate-200`}
+                    disabled={!bike?.data?.isAvailable}
+                    onClick={() => handleAuth()}
+                  >
+                    Book Now
+                  </Button>
+                </DialogTrigger>
+                <BookingModal
+                  bikeId={bike?.data?._id}
+                  setIsMainOpen={setIsMainOpen}
+                />
+              </Dialog>
+            )}
+            {!user?.role && (
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    aria-readonly={true}
+                    className="w-full text-lg py-6 bg-indigo-800 text-white hover:bg-indigo-700 dark:text-slate-200"
+                  >
+                    Book Now
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent className="w-[90%] flex flex-col bg-indigo-100 dark:bg-gradient-to-b dark:from-background dark:to-muted">
+                  <span className="flex justify-end">
+                    <AlertDialogCancel className="w-10 h-10 p-0">
+                      <IoMdClose className="text-xl" />
+                    </AlertDialogCancel>
+                  </span>
+                  <AlertDialogTitle>
+                    <p className="text-lg">
+                      Please log in to continue the booking!
+                    </p>
+                  </AlertDialogTitle>
+                  <span className="flex justify-end">
+                    <Link to={"/login"}>
+                      <Button className="dark:bg-indigo-500 dark:hover:bg-indigo-600 dark:text-slate-300">
+                        Log in
+                      </Button>
+                    </Link>
+                  </span>
+                </AlertDialogContent>
+              </AlertDialog>
+            )}
           </CardFooter>
         </Card>
       </div>

@@ -180,7 +180,7 @@ const BikeEditForm = ({
     }
   };
   return (
-    <section className="dark:bg-gradient-to-b dark:from-background dark:to-muted bg-slate-50 bg-gradient-to-b from-green-50 to-blue-50 px-5 py-10 mt-5 shadow-md rounded-md">
+    <section className="dark:bg-gradient-to-b h-[90vh] overflow-auto dark:from-background dark:to-muted bg-slate-50 bg-gradient-to-b from-green-50 to-blue-50 px-5 py-10 mt-5 shadow-md rounded-md">
       <div className="flex justify-between">
         <div className="flex gap-2">
           <h1 className=" bebas-neue-regular text-3xl">Edit Bike Details</h1>

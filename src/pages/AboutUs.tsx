@@ -166,11 +166,11 @@ const AboutUs = () => {
               </div>
               <div className="flex items-center">
                 <Phone className="mr-2 h-5 w-5" />
-                <p>+1 (555) 123-4567</p>
+                <a href="tel:+123-4567">+1 (555) 123-4567</a>
               </div>
               <div className="flex items-center">
                 <Mail className="mr-2 h-5 w-5" />
-                <p>ride@bikebuddies.com</p>
+                <a href="mailto:ride@ridepro.com">ride@ridepro.com</a>
               </div>
             </div>
             <div>

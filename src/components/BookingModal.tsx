@@ -11,8 +11,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAppDispatch } from "@/hooks/hooks";
 import { setRentStartTime } from "@/redux/features/rentTime/RentTimeSlice";
+import { convertToDate, formatTime } from "@/utils/convertToDate";
 import { Clock } from "lucide-react";
-import moment from "moment-timezone";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -26,7 +26,7 @@ const BookingModal = ({
   const dispatch = useAppDispatch();
   const [isTimePickerOpen, setIsTimePickerOpen] = useState(false);
   const [selectedTime, setSelectedTime] = useState(() =>
-    moment().format("hh:mm")
+    formatTime(new Date())
   );
 
   const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,15 +36,9 @@ const BookingModal = ({
   const handleConfirmTime = () => {
     setIsTimePickerOpen(false);
   };
-  // const formattedTime = moment(selectedTime, "HH:mm").format("hh:mm a");
 
   const handlePay = () => {
-    // const currentDateTime = new Date();
-    // const returnRentTime = moment(currentDateTime, "HH:mm").toDate();
-    const startTime = moment(selectedTime, "HH:mm")
-      .tz(moment.tz.guess(), true)
-      .toDate();
-
+    const startTime = convertToDate(selectedTime);
     dispatch(
       setRentStartTime({
         rentStartTime: startTime.toISOString(),
@@ -98,7 +92,7 @@ const BookingModal = ({
               <Input
                 id="time"
                 type="time"
-                value={selectedTime}
+                value={selectedTime.split(" ")[0]}
                 onChange={handleTimeChange}
                 className="col-span-3 user-select-none text-slate-300"
               />

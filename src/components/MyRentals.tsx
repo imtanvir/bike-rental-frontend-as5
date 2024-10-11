@@ -31,7 +31,7 @@ const MyRentals = () => {
   return (
     <div className="container mx-auto px-4 py-8 overflow-auto poppins-regular ">
       <Tabs defaultValue="unpaid" className="space-y-4">
-        <h1 className="text-3xl font-bold mb-6">My Rentals</h1>
+        <h1 className="text-3xl font-bold mb-6 md:pt-0 pt-6">My Rentals</h1>
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="unpaid">Unpaid</TabsTrigger>
           <TabsTrigger value="paid">Paid</TabsTrigger>

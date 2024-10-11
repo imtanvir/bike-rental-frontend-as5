@@ -57,11 +57,11 @@ const Profile = () => {
     <>
       <div className="flex-1 p-10 space-y-6 overflow-y-auto poppins-regular">
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl">
+          <h1 className="md:text-3xl text-2xl">
             {(user as TUser).role === "admin"
               ? "Admin"
               : (user as TUser).role === "superAdmin"
-              ? "Super Admin"
+              ? "S. Admin"
               : "User"}{" "}
             Profile
           </h1>

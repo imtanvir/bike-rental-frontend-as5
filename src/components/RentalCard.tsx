@@ -131,7 +131,7 @@ const RentalCard = ({
   return (
     <>
       <Card className=" mb-6 animate-fade-left  shadow dark:bg-slate-800 dark:text-slate-300 bg-indigo-200">
-        <div className="flex flex-col sm:flex-row items-center">
+        <div className="flex flex-col-reverse sm:flex-row sm:items-center ">
           <div className="flex-1 p-6">
             <CardHeader className="p-0">
               <CardTitle className="text-xl font-bold">
@@ -221,12 +221,12 @@ const RentalCard = ({
                         Return Bike
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px] w-[90%]">
+                    <DialogContent className="sm:max-w-[425px] w-[90%] bg-indigo-600  dark:bg-gradient-to-b dark:from-background dark:to-muted">
                       <DialogTitle></DialogTitle>
                       <DialogHeader>
                         <DialogDescription>
                           {!isReturned && (
-                            <span className="flex items-center justify-center p-10 text-center">
+                            <span className="flex items-center justify-center p-10 text-center text-2xl text-yellow-400">
                               <svg
                                 className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
                                 xmlns="http://www.w3.org/2000/svg"
@@ -251,7 +251,7 @@ const RentalCard = ({
                             </span>
                           )}
                           {isReturned && (
-                            <span className="text-green-500 text-xl text-center p-10">
+                            <span className="text-green-500 text-xl font-bold text-center p-10">
                               Returned Successfully
                             </span>
                           )}
@@ -312,7 +312,7 @@ const RentalCard = ({
         </div>
       </Card>
       <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <AlertDialogContent className="flex flex-col  bg-indigo-600 ">
+        <AlertDialogContent className="flex flex-col  bg-indigo-600 w-[90vw]">
           <div className="flex justify-end">
             <AlertDialogCancel
               onClick={handleClose}
@@ -322,10 +322,12 @@ const RentalCard = ({
             </AlertDialogCancel>
           </div>
           <AlertDialogTitle>
-            <span className="md:text-3xl text-xl block bebas-neue-regular">
+            <span className="md:text-3xl text-white text-xl block bebas-neue-regular">
               Share your experience with us
             </span>
-            <span className="block">Your feedback will help us improve.</span>
+            <span className="block text-white">
+              Your feedback will help us improve.
+            </span>
           </AlertDialogTitle>
           <Textarea
             className="text-slate-800 text-base bg-indigo-200 focus:ring-0 focus:ring-offset-0 focus:border-0 border-0 border-transparent outline-none"
@@ -339,7 +341,7 @@ const RentalCard = ({
           </span>
           <div className="flex justify-between">
             <div className="flex gap-2 items-center flex-row box-content">
-              <span className="text-lg block">Rating</span>
+              <span className="text-lg block text-white">Rating</span>
               {/* @ts-expect-error there is a version miss-match in the source */}
               <Rating
                 emptySymbol={
@@ -369,7 +371,7 @@ const RentalCard = ({
             <Button
               disabled={isProcessing}
               onClick={handleTestimonialSubmit}
-              className="w-1/4 bg-blue-500 text-white hover:bg-blue-500/80"
+              className="w-1/4 bg-blue-500 text-white hover:bg-blue-500/80 font-semibold text-lg"
             >
               {isProcessing ? "Processing..." : "Submit"}
             </Button>

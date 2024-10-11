@@ -6,6 +6,7 @@ import { setUser, userCurrentToken } from "@/redux/features/auth/authSlice";
 import { useUpdateUserProfileMutation } from "@/redux/features/profile/profileApi";
 import { TUser } from "@/redux/features/profile/profileSlice";
 import { TImage } from "@/types/intex";
+import { formFieldValidation } from "@/utils/formFiledValidation";
 import React, { ChangeEvent, useRef, useState } from "react";
 import { FaPen } from "react-icons/fa6";
 import { IoCloseCircleOutline } from "react-icons/io5";
@@ -75,6 +76,19 @@ const ProfileEditForm = ({
   };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const formValidation = formFieldValidation(
+      current_user,
+      selectUserImg.image === null
+        ? (current_user.image as TImage[])
+        : (selectUserImg.image as File[])
+    );
+    if (formValidation.data) {
+      toast.error(" Please fill all the required fields", {
+        duration: 2000,
+        className: "bg-red-500 text-white border-red-400",
+      });
+      return;
+    }
     setIsProcessing(!isProcessing);
     const toastId = toast.loading("Profile updating...");
     const submissionData = new FormData();

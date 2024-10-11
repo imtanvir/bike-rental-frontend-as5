@@ -48,7 +48,6 @@ import {
 } from "@/redux/features/users/usersSlice";
 import CopyIdFunc from "@/utils/CopyIdFunc";
 import { AlertDialog } from "@radix-ui/react-alert-dialog";
-import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { FaRegEdit } from "react-icons/fa";
 import { toast } from "sonner";
@@ -140,10 +139,6 @@ const UserManagement = () => {
                     className=" dark:bg-slate-800 dark:text-slate-300"
                   />
                 </div>
-                <Button className="dark:bg-indigo-800 dark:text-slate-300">
-                  <Search className="h-4 w-4 mr-2" />
-                  Search
-                </Button>
               </div>
               <div className=" bg-indigo-50 dark:bg-slate-800 p-4 shadow">
                 <Accordion type="single" collapsible className="w-full">
@@ -178,130 +173,133 @@ const UserManagement = () => {
               <Table>
                 <TableHeader className="sticky top-0 z-10 dark:bg-slate-700  bg-indigo-700 hover:bg-indigo-700 ">
                   <TableRow className="text-center flex flex-row justify-around items-center hover:bg-indigo-700 dark:hover:bg-slate-700">
-                    <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4 box-border">
+                    <TableHead className="md:flex-1 flex-auto md:w-auto w-[100px] text-center text-slate-50 pt-4 box-border">
                       User
                     </TableHead>
-                    <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4 box-border">
+                    <TableHead className="md:flex-1 flex-auto md:w-auto w-[100px] text-center text-slate-50 pt-4 box-border">
                       Name
                     </TableHead>
-                    <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4 box-border">
+                    <TableHead className="md:flex-1 flex-auto md:w-auto w-[100px] text-center text-slate-50 pt-4 box-border">
                       Email
                     </TableHead>
-                    <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4 box-border">
+                    <TableHead className="md:flex-1 flex-auto md:w-auto w-[100px] text-center text-slate-50 pt-4 box-border">
                       Phone
                     </TableHead>
-                    <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4 box-border">
+                    <TableHead className="md:flex-1 flex-auto md:w-auto w-[100px] text-center text-slate-50 pt-4 box-border">
                       Role
                     </TableHead>
-                    <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4 box-border">
+                    <TableHead className="md:flex-1 flex-auto md:w-auto w-[100px] text-center text-slate-50 pt-4 box-border">
                       Action
                     </TableHead>
                   </TableRow>
                 </TableHeader>
               </Table>
-            </div>
-            <div className="max-h-[70vh] overflow-y-auto">
-              <Table>
-                <TableBody>
-                  {filteredUsers?.length !== 0 &&
-                    filteredUsers?.map((item: TUser) => (
-                      <TableRow
-                        key={item._id}
-                        className="dark:hover:bg-slate-800 text-center flex flex-row justify-around items-center"
-                      >
-                        <TableCell className="font-medium md:flex-1 flex-auto flex justify-center">
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <div className="cursor-pointer rounded-lg flex justify-center items-center overflow-hidden w-20 h-20">
+              <div className="max-h-[70vh] overflow-y-auto">
+                <Table>
+                  <TableBody>
+                    {filteredUsers?.length !== 0 &&
+                      filteredUsers?.map((item: TUser) => (
+                        <TableRow
+                          key={item._id}
+                          className="dark:hover:bg-slate-800 text-center flex flex-row justify-around items-center"
+                        >
+                          <TableCell className="font-medium md:flex-1 flex-auto flex justify-center">
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <div className="cursor-pointer rounded-lg flex justify-center items-center overflow-hidden w-20 h-20">
+                                  <img
+                                    className="w-20 h-20 object-cover rounded-lg transition hover:transition-transform hover:scale-125"
+                                    src={`${item?.image?.[0]?.url}`}
+                                    alt={item.name as string}
+                                  />
+                                </div>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent className="flex flex-col items-end">
+                                <AlertDialogCancel className="w-10 h-10 p-0">
+                                  <IoMdClose className="text-xl" />
+                                </AlertDialogCancel>
                                 <img
-                                  className="w-20 h-20 object-cover rounded-lg transition hover:transition-transform hover:scale-125"
                                   src={`${item?.image?.[0]?.url}`}
                                   alt={item.name as string}
                                 />
-                              </div>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent className="flex flex-col items-end">
-                              <AlertDialogCancel className="w-10 h-10 p-0">
-                                <IoMdClose className="text-xl" />
-                              </AlertDialogCancel>
-                              <img
-                                src={`${item?.image?.[0]?.url}`}
-                                alt={item.name as string}
-                              />
-                            </AlertDialogContent>
-                          </AlertDialog>
-                        </TableCell>
-                        <TableCell className="md:flex-1 flex-auto text-center">
-                          {item.name}
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <CopyIdFunc
-                                  paramsText={"User ID"}
-                                  selectedId={item?._id as string}
-                                />
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>Copy User ID!</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        </TableCell>
-                        <TableCell className="md:flex-1 flex-auto text-center">
-                          {item.email}
-                        </TableCell>
-                        <TableCell className="md:flex-1 flex-auto text-center">
-                          {item.phone}
-                        </TableCell>
-                        <TableCell className="md:flex-1 flex-auto text-center">
-                          {item.role}
-                        </TableCell>
-                        <TableCell className="w-[150px] text-center flex gap-2 justify-center">
-                          <Button
-                            className="bg-indigo-600 hover:bg-indigo-700 text-slate-100"
-                            onClick={() => {
-                              setIsEditing(true);
-                              setSelectedUser(item);
-                            }}
-                          >
-                            <FaRegEdit />
-                          </Button>
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <Button className="bg-red-600 hover:bg-red-700 text-slate-100">
-                                <RiDeleteBin6Line />
-                              </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent className="bg-red-500 border-red-500 text-slate-100 w-[90%]">
-                              <AlertDialogHeader>
-                                <AlertDialogTitle className="md:text-2xl text-xl p-bold text-slate-100 dark:text-slate-900 flex gap-6 items-center">
-                                  Are you absolutely sure? <RiDeleteBin6Line />
-                                </AlertDialogTitle>
-                                <AlertDialogDescription className="dark:text-slate-800 text-base text-start text-slate-200 poppins-regular">
-                                  This action cannot be undone. This will
-                                  permanently delete the Bike data!
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel className=" bg-orange-400 hover:bg-orange-500 dark:text-slate-900 p-medium border-orange-400 hover:border-orange-500">
-                                  Cancel
-                                </AlertDialogCancel>
-                                <AlertDialogAction
-                                  onClick={() =>
-                                    handleDeleteUser(item._id as string)
-                                  }
-                                  className="bg-indigo-800 text-white hover:bg-indigo-700  dark:text-slate-100 "
-                                >
-                                  Delete
-                                </AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                          </TableCell>
+                          <TableCell className="md:flex-1 flex-auto flex flex-row items-center text-center">
+                            {item.name?.split(" ")[0]}
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <CopyIdFunc
+                                    paramsText={"User ID"}
+                                    selectedId={item?._id as string}
+                                  />
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Copy User ID!</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          </TableCell>
+                          <TableCell className="md:flex-1 flex-auto text-center">
+                            {item.email}
+                          </TableCell>
+                          <TableCell className="md:flex-1 flex-auto text-center">
+                            {item.phone}
+                          </TableCell>
+                          <TableCell className="md:flex-1 flex-auto text-center">
+                            {item?.role === "superAdmin"
+                              ? "SUPER ADMIN"
+                              : item.role?.toUpperCase()}
+                          </TableCell>
+                          <TableCell className="w-[150px] text-center flex gap-2 justify-center">
+                            <Button
+                              className="bg-indigo-600 hover:bg-indigo-700 text-slate-100"
+                              onClick={() => {
+                                setIsEditing(true);
+                                setSelectedUser(item);
+                              }}
+                            >
+                              <FaRegEdit />
+                            </Button>
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button className="bg-red-600 hover:bg-red-700 text-slate-100">
+                                  <RiDeleteBin6Line />
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent className="bg-red-500 border-red-500 text-slate-100 w-[90%]">
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle className="md:text-2xl text-xl p-bold text-slate-100 dark:text-slate-900 flex gap-6 items-center">
+                                    Are you absolutely sure?{" "}
+                                    <RiDeleteBin6Line />
+                                  </AlertDialogTitle>
+                                  <AlertDialogDescription className="dark:text-slate-800 text-base text-start text-slate-200 poppins-regular">
+                                    This action cannot be undone. This will
+                                    permanently delete the Bike data!
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel className=" bg-orange-400 hover:bg-orange-500 dark:text-slate-900 p-medium border-orange-400 hover:border-orange-500">
+                                    Cancel
+                                  </AlertDialogCancel>
+                                  <AlertDialogAction
+                                    onClick={() =>
+                                      handleDeleteUser(item._id as string)
+                                    }
+                                    className="bg-indigo-800 text-white hover:bg-indigo-700  dark:text-slate-100 "
+                                  >
+                                    Delete
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </div>
             </div>
           </div>
         </div>

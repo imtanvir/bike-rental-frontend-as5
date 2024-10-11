@@ -36,7 +36,7 @@ const ContactUs = () => {
         <h1 className=" text-left md:text-6xl text-4xl bebas-neue-regular">
           Contact With Us
         </h1>
-        <div className="poppins-regular max-w-xl mx-auto mt-16 flex w-full flex-col rounded-lg shadow-xl border border-gray-300 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 p-8">
+        <div className="bg-gradient-to-b from-green-50 to-blue-50 poppins-regular max-w-xl mx-auto mt-16 flex w-full flex-col rounded-lg shadow-xl border border-gray-300 dark:border-slate-800 bg-slate-50  dark:bg-gradient-to-b dark:from-background dark:to-muted p-8">
           <h2 className="title-font mb-1 text-lg font-medium dark:text-slate-300">
             Feedback
           </h2>
@@ -64,7 +64,7 @@ const ContactUs = () => {
                 id="email"
                 name="email"
                 placeholder="type your email ex:jhon@gmail.com"
-                className="w-full rounded border border-gray-300 bg-white dark:bg-slate-600 dark:text-slate-300 dark:border-slate-700 py-1 px-3 text-base leading-8 text-slate-500 outline-none transition-colors duration-200 ease-in-out focus:border-indigo-500 dark:focus:border-slate-500 focus:ring-2 focus:ring-indigo-200 dark:focus:ring-slate-500"
+                className="w-full rounded border border-gray-300 bg-white dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700 py-1 px-3 text-base leading-8 text-slate-500 outline-none transition-colors duration-200 ease-in-out focus:border-indigo-500 dark:focus:border-slate-500 focus:ring-2 focus:ring-indigo-200 dark:focus:ring-slate-500"
               />
             </div>
             <div className="mb-4">
@@ -79,7 +79,7 @@ const ContactUs = () => {
                 id="message"
                 name="message"
                 placeholder="Share your feedback with us..."
-                className="h-32 w-full resize-none rounded border dark:bg-slate-600 border-gray-300 dark:border-slate-700 py-1 px-3 text-base leading-6 text-gray-700 dark:text-slate-300 outline-none transition-colors duration-200 ease-in-out focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 dark:focus:ring-slate-500"
+                className="h-32 w-full resize-none rounded border dark:bg-slate-800 border-gray-300 dark:border-slate-700 py-1 px-3 text-base leading-6 text-gray-700 dark:text-slate-300 outline-none transition-colors duration-200 ease-in-out focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 dark:focus:ring-slate-500"
               ></textarea>
             </div>
             <button

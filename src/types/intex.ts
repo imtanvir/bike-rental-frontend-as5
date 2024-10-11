@@ -22,3 +22,28 @@ export type TBike = {
   gears: string;
   features: string[];
 };
+
+type TErrorSource = {
+  message: string;
+  path: string;
+};
+export type TError = {
+  data: {
+    message: string;
+    stack: string;
+    success: boolean;
+    errorSource: TErrorSource[];
+  };
+  status: number;
+};
+export type TErrorResponse = {
+  error: {
+    data: {
+      message: string;
+      stack: string;
+      success: boolean;
+      errorSource: TErrorSource[];
+    };
+    status: number;
+  };
+};

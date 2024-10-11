@@ -51,10 +51,10 @@ const WhyChooseUs = () => {
   return (
     <section className="py-16 bg-gradient-to-b from-green-50 to-blue-50 dark:bg-gradient-to-b dark:from-background dark:to-muted">
       <div className="container mx-auto px-4 poppins-regular">
-        <h1 className="md:text-6xl bebas-neue-regular text-left mb-4">
+        <h1 className="md:text-6xl text-3xl bebas-neue-regular text-left mb-4">
           Why Choose Our Bike Rental
         </h1>
-        <p className="text-xl text-left text-muted-foreground mb-12">
+        <p className="md:text-xl text-lg  text-left text-muted-foreground mb-12">
           Discover the advantages that make us the top choice for riding
         </p>
 
@@ -67,7 +67,7 @@ const WhyChooseUs = () => {
               <div className="mb-4 p-3 bg-indigo-700/10 dark:bg-indigo-900/40 rounded-full">
                 {benefit.icon}
               </div>
-              <h3 className="text-2xl font-semibold mb-2 dark:text-slate-300">
+              <h3 className="md:text-2xl text-xl font-semibold mb-2 dark:text-slate-300">
                 {benefit.title}
               </h3>
               <p className="text-muted-foreground mb-4 dark:text-slate-400">

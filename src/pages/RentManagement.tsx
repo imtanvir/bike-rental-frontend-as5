@@ -165,28 +165,28 @@ const RentManagement = () => {
             <Table>
               <TableHeader className="sticky top-0 z-10 dark:bg-slate-700  bg-indigo-700 hover:bg-indigo-700 ">
                 <TableRow className="text-center flex flex-row justify-around items-center hover:bg-indigo-700 dark:hover:bg-slate-700">
-                  <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4 box-border">
+                  <TableHead className="md:flex-1 flex-auto md:w-auto w-[100px] text-center text-slate-50 pt-4 box-border">
                     Bike
                   </TableHead>
-                  <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4">
+                  <TableHead className="md:flex-1 flex-auto md:w-auto w-[100px] text-center text-slate-50 pt-4">
                     Name
                   </TableHead>
-                  <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4 box-border">
+                  <TableHead className="md:flex-1 flex-auto md:w-auto w-[100px] text-center text-slate-50 pt-4 box-border">
                     User
                   </TableHead>
-                  <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4 box-border">
+                  <TableHead className="md:flex-1 flex-auto md:w-auto w-[100px] text-center text-slate-50 pt-4 box-border">
                     Start Time
                   </TableHead>
-                  <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4 box-border">
+                  <TableHead className="md:flex-1 flex-auto md:w-auto w-[100px] text-center text-slate-50 pt-4 box-border">
                     Exact Return
                   </TableHead>
-                  <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4 box-border">
+                  <TableHead className="md:flex-1 flex-auto md:w-auto w-[100px] text-center text-slate-50 pt-4 box-border">
                     Total Cost
                   </TableHead>
-                  <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4 box-border">
+                  <TableHead className="md:flex-1 flex-auto md:w-auto w-[100px] text-center text-slate-50 pt-4 box-border">
                     Status
                   </TableHead>
-                  <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4 box-border">
+                  <TableHead className="md:flex-1 flex-auto md:w-auto w-[100px] text-center text-slate-50 pt-4 box-border">
                     Action
                   </TableHead>
                 </TableRow>

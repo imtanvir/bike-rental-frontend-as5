@@ -5,8 +5,9 @@ import { Separator } from "@/components/ui/separator";
 import { useAppSelector } from "@/hooks/hooks";
 import { currentUser } from "@/redux/features/auth/authSlice";
 import { TUser } from "@/redux/features/profile/profileSlice";
+import { Menu } from "lucide-react";
 import { useState } from "react";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
+import { FaArrowLeft } from "react-icons/fa6";
 import { Outlet } from "react-router-dom";
 import "./UserDashboard.css";
 
@@ -26,16 +27,18 @@ export default function UserProfileDashboard() {
     <div className="flex h-screen relative dark:bg-gradient-to-b dark:from-background dark:to-muted bg-slate-50 bg-gradient-to-b from-green-50 to-blue-50">
       {/* Sidebar */}
       <Button
-        className="md:hidden dark:bg-slate-500 absolute -left-4 top-2"
+        className="md:hidden  absolute -left-1 top-2"
         onClick={handleToggleSidebar}
+        variant="outline"
+        size="icon"
       >
-        <FaArrowRight className="dark:text-slate-300" />
+        <Menu className="h-5 w-5 rotate-0 scale-100" />
       </Button>
       <div
-        className={`bg-indigo-900 dark:bg-slate-900 md:w-64 p-6 space-y-6 md:relative absolute z-30 transition-transform duration-500 ease-in-out  shadow w-30% h-full transform ${
+        className={` bg-slate-950 lg:w-64 w-30% p-6 space-y-6 lg:relative absolute z-30 transition-transform duration-500 ease-in-out  shadow  h-full transform ${
           sidebarOpen
             ? "translate-x-0 "
-            : "translate-x-[-100%] md:translate-x-0"
+            : "translate-x-[-100%] lg:translate-x-0"
         }`}
       >
         <div className="flex items-center relative space-x-2 ">
@@ -78,7 +81,6 @@ export default function UserProfileDashboard() {
           <Sidebar role={role} />
         </nav>
       </div>
-      {/* Main Content */}
       <Outlet />
     </div>
   );

@@ -87,7 +87,7 @@ const CouponWheel = () => {
       // Calculate the duration for the spin
       const spinDuration = 5000; // 5 seconds
 
-      // Set a timeout to stop spinning and calculate the result
+      // Start the spin
       setTimeout(async () => {
         setIsSpinning(false);
         const normalizedRotation = ((newRotation % 360) + 360) % 360;
@@ -212,7 +212,7 @@ const CouponWheel = () => {
                     Spin the Wheel
                   </Button>
                 </AlertDialogTrigger>
-                <AlertDialogContent className="flex flex-col items-end bg-indigo-100 dark:bg-gradient-to-b dark:from-background dark:to-muted">
+                <AlertDialogContent className="w-[90%] flex flex-col items-end bg-indigo-100 dark:bg-gradient-to-b dark:from-background dark:to-muted">
                   <AlertDialogCancel className="w-10 h-10 p-0">
                     <IoMdClose className="text-xl" />
                   </AlertDialogCancel>

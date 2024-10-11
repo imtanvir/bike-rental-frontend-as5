@@ -39,7 +39,6 @@ import {
 import { bikeCurrentBikes, setBikes } from "@/redux/features/bike/bikeSlice";
 import { TBike } from "@/types/intex";
 import { AlertDialog } from "@radix-ui/react-alert-dialog";
-import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { FaRegEdit } from "react-icons/fa";
 import { toast } from "sonner";
@@ -143,10 +142,6 @@ const BikeManagement = () => {
                     className=" dark:bg-slate-800 dark:text-slate-300"
                   />
                 </div>
-                <Button className="dark:bg-indigo-800 dark:text-slate-300">
-                  <Search className="h-4 w-4 mr-2" />
-                  Search
-                </Button>
               </div>
               <div className=" bg-indigo-50 dark:bg-slate-800 p-4 shadow flex justify-between gap-2">
                 <Accordion type="single" collapsible className="w-full">
@@ -219,22 +214,22 @@ const BikeManagement = () => {
               <Table>
                 <TableHeader className="sticky top-0 z-10 dark:bg-slate-700  bg-indigo-700 hover:bg-indigo-700 ">
                   <TableRow className="text-center flex flex-row justify-around items-center hover:bg-indigo-700 dark:hover:bg-slate-700">
-                    <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4 box-border">
+                    <TableHead className="md:flex-1 flex-auto md:w-auto w-[100px] text-center text-slate-50 pt-4 box-border">
                       Bike
                     </TableHead>
-                    <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4 box-border">
+                    <TableHead className="md:flex-1 flex-auto md:w-auto w-[100px] text-center text-slate-50 pt-4 box-border">
                       Name
                     </TableHead>
-                    <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4 box-border">
+                    <TableHead className="md:flex-1 flex-auto md:w-auto w-[100px] text-center text-slate-50 pt-4 box-border">
                       Brand
                     </TableHead>
-                    <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4 box-border">
+                    <TableHead className="md:flex-1 flex-auto md:w-auto w-[100px] text-center text-slate-50 pt-4 box-border">
                       Model
                     </TableHead>
-                    <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4 box-border">
+                    <TableHead className="md:flex-1 flex-auto md:w-auto w-[100px] text-center text-slate-50 pt-4 box-border">
                       Available
                     </TableHead>
-                    <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4 box-border">
+                    <TableHead className="md:flex-1 flex-auto md:w-auto w-[100px] text-center text-slate-50 pt-4 box-border">
                       Action
                     </TableHead>
                   </TableRow>
@@ -300,12 +295,12 @@ const BikeManagement = () => {
                                 <RiDeleteBin6Line />
                               </Button>
                             </AlertDialogTrigger>
-                            <AlertDialogContent className="bg-red-500 border-red-500 text-slate-100 w-[90%]">
+                            <AlertDialogContent className="bg-red-500 border-red-500 text-slate-100 w-[90%] rounded-lg">
                               <AlertDialogHeader>
                                 <AlertDialogTitle className="md:text-2xl text-xl p-bold text-slate-100 dark:text-slate-900 flex gap-6 items-center">
                                   Are you absolutely sure? <RiDeleteBin6Line />
                                 </AlertDialogTitle>
-                                <AlertDialogDescription className="dark:text-slate-800 text-base text-start text-slate-200 poppins-regular">
+                                <AlertDialogDescription className="dark:text-slate-800 text-base text-start text-slate-200 font-semibold">
                                   This action cannot be undone. This will
                                   permanently delete the Bike data!
                                 </AlertDialogDescription>
