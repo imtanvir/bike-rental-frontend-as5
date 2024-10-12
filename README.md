@@ -2,7 +2,7 @@
 
 - **Live Site:**
   - RidePro Bike Rental Service Live: https://bike-rental-frontend-as5-gx.vercel.app/
-  - RidePro Bike Rental Backend Api Live: https://bike-rental-frontend-as5-gx.vercel.app/
+  - RidePro Bike Rental Backend Api Live: https://bike-rental-backend-as5.vercel.app/
 
 ## Overview
 
