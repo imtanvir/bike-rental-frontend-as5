@@ -2,6 +2,7 @@ import BikeEditForm from "@/components/BikeEditForm";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
 import {
+  AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
@@ -38,7 +39,6 @@ import {
 } from "@/redux/features/bike/bikeApi";
 import { bikeCurrentBikes, setBikes } from "@/redux/features/bike/bikeSlice";
 import { TBike } from "@/types/intex";
-import { AlertDialog } from "@radix-ui/react-alert-dialog";
 import { useEffect, useState } from "react";
 import { FaRegEdit } from "react-icons/fa";
 import { toast } from "sonner";

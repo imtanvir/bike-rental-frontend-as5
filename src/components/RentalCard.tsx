@@ -7,14 +7,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
@@ -26,8 +18,9 @@ import { useReturnBikeByUserMutation } from "@/redux/features/booking/bookingApi
 import { TBooking } from "@/redux/features/booking/rentalSlice";
 import { useCreateTestimonialMutation } from "@/redux/features/testimonial/testimonialApi";
 import { timeConverter } from "@/utils/timeConverter";
-import moment from "moment";
 import { MutableRefObject, useState } from "react";
+
+import { isReturnTimeValid } from "@/utils/isReturnTimeValid";
 import { CiStar } from "react-icons/ci";
 import { FaStar } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
@@ -36,12 +29,15 @@ import Rating from "react-rating";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import placeholderImg from "../assets/images/banner.png";
+import BookingModal from "./BookingModal";
+import ReturnProcessingModal from "./ReturnProcessingModal";
 import {
   AlertDialog,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogTitle,
 } from "./ui/alert-dialog";
+import { Dialog } from "./ui/dialog";
 import { Textarea } from "./ui/textarea";
 
 const RentalCard = ({
@@ -52,14 +48,18 @@ const RentalCard = ({
   reviewRef: MutableRefObject<number>;
 }) => {
   const [createTestimonial] = useCreateTestimonialMutation();
-  const [isMainOpen, setIsMainOpen] = useState(false);
+  const [isReturnModalOpen, setIsReturnModalOpen] = useState(false);
   const [isReturned, setIsReturned] = useState(false);
   const [returnBike] = useReturnBikeByUserMutation();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isMainOpen, setIsMainOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [bikeRating, setBikeRating] = useState(0);
   const [feedback, setFeedback] = useState("");
   const [isReviewed, setIsReviewed] = useState(false);
+  const [selectedReturnTime, setSelectedReturnTime] = useState<null | string>(
+    null
+  );
   const navigate = useNavigate();
   const user = useAppSelector(currentUser);
   const startTimeIs = rental.startTime?.toString();
@@ -68,18 +68,46 @@ const RentalCard = ({
     .slice(0, 26);
 
   const handleReturnBike = async () => {
-    const currentDateTime = new Date();
-    const returnRentTime = moment(currentDateTime, "HH:mm").toDate();
-    const response = await returnBike({
-      data: { estimatedReturnTime: returnRentTime.toISOString() },
-      id: rental._id,
-    });
+    const returnTimeValid = isReturnTimeValid(
+      rental?.startTime?.toString() as string,
+      selectedReturnTime as string
+    );
+    const toastId = toast.loading("Returning bike...");
+    if (!returnTimeValid) {
+      toast.error("Invalid return time! Please select a valid time.", {
+        duration: 5000,
+        id: toastId,
+        className: "bg-red-500 text-white border-red-400",
+      });
+      return;
+    }
+    try {
+      setIsReturnModalOpen(true);
+      const response = await returnBike({
+        data: {
+          estimatedReturnTime: selectedReturnTime,
+        },
+        id: rental._id,
+      });
 
-    if (response.data.success === true) {
-      setIsReturned(true);
-      setTimeout(() => {
-        setIsMainOpen(false);
-      }, 2000);
+      if (response?.data?.success === true) {
+        toast.success("Bike returned successfully!", {
+          duration: 2000,
+          id: toastId,
+          className: "bg-green-500 text-white border-green-400",
+        });
+        setIsReturned(true);
+        setTimeout(() => {
+          setIsReturnModalOpen(false);
+        }, 2000);
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      toast.error("Something went wrong!", {
+        id: toastId,
+        duration: 2000,
+        className: "bg-red-500 text-white border-red-400",
+      });
     }
   };
   const estReturnTime = new Date(rental.estimatedReturnTime as Date)
@@ -212,53 +240,12 @@ const RentalCard = ({
             {!rental.pendingCalculation &&
               !rental.estimatedReturnTime?.toString() && (
                 <CardFooter className="p-0 mt-4">
-                  <Dialog open={isMainOpen} onOpenChange={setIsMainOpen}>
-                    <DialogTrigger asChild>
-                      <Button
-                        onClick={handleReturnBike}
-                        className="bg-blue-400 hover:bg-blue-500 text-white dark:text-slate-100"
-                      >
-                        Return Bike
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px] w-[90%] bg-indigo-600  dark:bg-gradient-to-b dark:from-background dark:to-muted">
-                      <DialogTitle></DialogTitle>
-                      <DialogHeader>
-                        <DialogDescription>
-                          {!isReturned && (
-                            <span className="flex items-center justify-center p-10 text-center text-2xl text-yellow-400">
-                              <svg
-                                className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                              >
-                                <circle
-                                  className="opacity-25"
-                                  cx="12"
-                                  cy="12"
-                                  r="10"
-                                  stroke="currentColor"
-                                  strokeWidth="4"
-                                ></circle>
-                                <path
-                                  className="opacity-75"
-                                  fill="currentColor"
-                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                ></path>
-                              </svg>
-                              Processing...
-                            </span>
-                          )}
-                          {isReturned && (
-                            <span className="text-green-500 text-xl font-bold text-center p-10">
-                              Returned Successfully
-                            </span>
-                          )}
-                        </DialogDescription>
-                      </DialogHeader>
-                    </DialogContent>
-                  </Dialog>
+                  <Button
+                    className="bg-blue-400 hover:bg-blue-500 text-white dark:text-slate-100"
+                    onClick={() => setIsMainOpen(true)}
+                  >
+                    Return Bike
+                  </Button>
                 </CardFooter>
               )}
             {rental.pendingCalculation && (
@@ -378,6 +365,21 @@ const RentalCard = ({
           </div>
         </AlertDialogContent>
       </AlertDialog>
+      <div>
+        <ReturnProcessingModal
+          isReturnModalOpen={isReturnModalOpen}
+          setIsReturnModalOpen={setIsReturnModalOpen}
+          isReturned={isReturned}
+        />
+      </div>
+      <Dialog open={isMainOpen} onOpenChange={setIsMainOpen}>
+        <BookingModal
+          rental={rental as TBooking}
+          handleReturnBike={handleReturnBike}
+          setIsMainOpen={setIsMainOpen}
+          setSelectedReturnTime={setSelectedReturnTime}
+        />
+      </Dialog>
     </>
   );
 };

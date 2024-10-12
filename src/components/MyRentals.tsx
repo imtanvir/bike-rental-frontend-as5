@@ -19,7 +19,7 @@ const MyRentals = () => {
     if (reviewRef.current > 0) {
       refetch();
     }
-  }, [refetch, reviewRef]);
+  }, [refetch]);
   const userRentals = data?.data?.filter(
     (rental: TBooking) => rental.userId?._id === user?._id
   );

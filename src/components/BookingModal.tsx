@@ -10,6 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAppDispatch } from "@/hooks/hooks";
+import { TBooking } from "@/redux/features/booking/rentalSlice";
 import { setRentStartTime } from "@/redux/features/rentTime/RentTimeSlice";
 import { convertToDate, formatTime } from "@/utils/convertToDate";
 import { Clock } from "lucide-react";
@@ -18,10 +19,16 @@ import { Link } from "react-router-dom";
 
 const BookingModal = ({
   bikeId = null,
+  rental = null,
+  handleReturnBike = () => {}, // default to an empty function
   setIsMainOpen,
+  setSelectedReturnTime = () => {},
 }: {
-  bikeId: string | null;
+  bikeId?: string | null;
+  rental?: TBooking | null;
+  handleReturnBike?: () => void;
   setIsMainOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedReturnTime?: React.Dispatch<React.SetStateAction<string | null>>;
 }) => {
   const dispatch = useAppDispatch();
   const [isTimePickerOpen, setIsTimePickerOpen] = useState(false);
@@ -49,10 +56,15 @@ const BookingModal = ({
   return (
     <DialogContent className="sm:max-w-[425px] w-[90%]">
       <DialogHeader>
-        <DialogTitle>Start Rent Your Bike</DialogTitle>
+        <DialogTitle>
+          {rental && rental?.bikeId?.isAvailable === false
+            ? "Return rented Bike"
+            : "Start Rent Your Bike"}
+        </DialogTitle>
         <DialogDescription>
-          Select your rent start time and go to next step to make an advance
-          payment to complete your booking.
+          {rental && rental?.bikeId?.isAvailable === false
+            ? " Select your rent return time and go to next step to return the bike."
+            : "Select your rent start time and go to next step to make an advance payment to complete your booking."}
         </DialogDescription>
       </DialogHeader>
       <div className="py-4">
@@ -61,27 +73,59 @@ const BookingModal = ({
           className="flex items-center bg-indigo-500 hover:bg-indigo-600 dark:bg-slate-800 text-white dark:hover:bg-slate-400"
         >
           <Clock className="mr-2 h-4 w-4" />
-          {selectedTime ? `Select Start Time  ${selectedTime}` : "Select Time"}
+          {selectedTime
+            ? `Select ${
+                rental && rental?.bikeId?.isAvailable === false
+                  ? "Return"
+                  : "Start"
+              } Time  ${selectedTime}`
+            : "Select Time"}
         </Button>
       </div>
       <DialogFooter className="flex flex-row gap-4 justify-end">
-        <Link to={`/payment/${bikeId}`}>
+        {bikeId && !rental && (
+          <>
+            <Link to={`/payment/${bikeId}`}>
+              <Button
+                onClick={handlePay}
+                className="bg-indigo-800 text-white hover:bg-indigo-700 dark:bg-indigo-700 dark:text-slate-100 dark:hover:bg-indigo-600"
+              >
+                Pay
+              </Button>
+            </Link>
+            <Button onClick={() => setIsMainOpen(false)}>Close</Button>
+          </>
+        )}
+        {rental && rental?.bikeId?.isAvailable === false && (
           <Button
-            onClick={handlePay}
+            onClick={() => {
+              handleReturnBike();
+              const returnTime = convertToDate(selectedTime);
+              setSelectedReturnTime(returnTime.toISOString());
+
+              setIsMainOpen(false);
+            }}
             className="bg-indigo-800 text-white hover:bg-indigo-700 dark:bg-indigo-700 dark:text-slate-100 dark:hover:bg-indigo-600"
           >
-            Pay
+            {"Return Bike"}
           </Button>
-        </Link>
-        <Button onClick={() => setIsMainOpen(false)}>Close</Button>
+        )}
       </DialogFooter>
 
       <Dialog open={isTimePickerOpen} onOpenChange={setIsTimePickerOpen}>
         <DialogContent className="sm:max-w-[300px] dark:bg-slate-800 w-[90%] rounded">
           <DialogHeader>
-            <DialogTitle>Start Time</DialogTitle>
+            <DialogTitle>
+              {rental?.bikeId?.isAvailable === false
+                ? "Return Time"
+                : "Start Time"}
+            </DialogTitle>
             <DialogDescription>
-              Choose the time of your booking.
+              {`Choose the time of your ${
+                rental?.bikeId?.isAvailable === false
+                  ? "return bike"
+                  : "booking"
+              } time.`}
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">

@@ -27,7 +27,7 @@ export default function UserProfileDashboard() {
     <div className="flex h-screen relative dark:bg-gradient-to-b dark:from-background dark:to-muted bg-slate-50 bg-gradient-to-b from-green-50 to-blue-50">
       {/* Sidebar */}
       <Button
-        className="md:hidden  absolute -left-1 top-2"
+        className="lg:hidden  absolute -left-1 top-2"
         onClick={handleToggleSidebar}
         variant="outline"
         size="icon"
@@ -43,7 +43,7 @@ export default function UserProfileDashboard() {
       >
         <div className="flex items-center relative space-x-2 ">
           <Button
-            className="md:hidden absolute -right-5 -top-5 p-2 dark:bg-slate-500 w-7 h-7 rounded-full"
+            className="lg:hidden absolute -right-5 -top-5 p-2 dark:bg-slate-500 w-7 h-7 rounded-full"
             onClick={handleToggleSidebar}
           >
             <FaArrowLeft className="text-slate-300 text-2xl" />

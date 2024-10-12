@@ -1,4 +1,5 @@
 import {
+  AlertDialog,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogTitle,
@@ -35,7 +36,6 @@ import {
 } from "@/redux/features/booking/rentalSlice";
 import CalculateButton from "@/utils/CalculateButton";
 import { timeConverter } from "@/utils/timeConverter";
-import { AlertDialog } from "@radix-ui/react-alert-dialog";
 import { useEffect, useState } from "react";
 import { FaArrowRightLong } from "react-icons/fa6";
 
@@ -89,6 +89,7 @@ const RentManagement = () => {
   const handleClose = () => {
     setIsDialogOpen(false);
   };
+
   return (
     <section className="container mx-auto">
       <div className="px-2">
@@ -165,28 +166,28 @@ const RentManagement = () => {
             <Table>
               <TableHeader className="sticky top-0 z-10 dark:bg-slate-700  bg-indigo-700 hover:bg-indigo-700 ">
                 <TableRow className="text-center flex flex-row justify-around items-center hover:bg-indigo-700 dark:hover:bg-slate-700">
-                  <TableHead className="md:flex-1 flex-auto md:w-auto w-[100px] text-center text-slate-50 pt-4 box-border">
+                  <TableHead className="md:flex-1 flex-auto whitespace-nowrap md:w-auto w-[100px] text-center text-slate-50 pt-4 box-border">
                     Bike
                   </TableHead>
-                  <TableHead className="md:flex-1 flex-auto md:w-auto w-[100px] text-center text-slate-50 pt-4">
+                  <TableHead className="md:flex-1 flex-auto whitespace-nowrap md:w-auto w-[100px] text-center text-slate-50 pt-4">
                     Name
                   </TableHead>
-                  <TableHead className="md:flex-1 flex-auto md:w-auto w-[100px] text-center text-slate-50 pt-4 box-border">
+                  <TableHead className="md:flex-1 flex-auto whitespace-nowrap md:w-auto w-[100px] text-center text-slate-50 pt-4 box-border">
                     User
                   </TableHead>
-                  <TableHead className="md:flex-1 flex-auto md:w-auto w-[100px] text-center text-slate-50 pt-4 box-border">
+                  <TableHead className="md:flex-1 flex-auto whitespace-nowrap md:w-auto w-[100px] text-center text-slate-50 pt-4 box-border">
                     Start Time
                   </TableHead>
-                  <TableHead className="md:flex-1 flex-auto md:w-auto w-[100px] text-center text-slate-50 pt-4 box-border">
-                    Exact Return
+                  <TableHead className="md:flex-1 flex-auto whitespace-nowrap md:w-auto w-[100px] text-center text-slate-50 pt-4 box-border">
+                    Return Time
                   </TableHead>
-                  <TableHead className="md:flex-1 flex-auto md:w-auto w-[100px] text-center text-slate-50 pt-4 box-border">
+                  <TableHead className="md:flex-1 flex-auto whitespace-nowrap md:w-auto w-[100px] text-center text-slate-50 pt-4 box-border">
                     Total Cost
                   </TableHead>
-                  <TableHead className="md:flex-1 flex-auto md:w-auto w-[100px] text-center text-slate-50 pt-4 box-border">
+                  <TableHead className="md:flex-1 flex-auto whitespace-nowrap md:w-auto w-[100px] text-center text-slate-50 pt-4 box-border">
                     Status
                   </TableHead>
-                  <TableHead className="md:flex-1 flex-auto md:w-auto w-[100px] text-center text-slate-50 pt-4 box-border">
+                  <TableHead className="md:flex-1 flex-auto whitespace-nowrap md:w-auto w-[100px] text-center text-slate-50 pt-4 box-border">
                     Action
                   </TableHead>
                 </TableRow>
@@ -227,11 +228,11 @@ const RentManagement = () => {
                       <TableCell className="md:flex-1 flex-auto text-center">
                         {item?.bikeId?.name}
                       </TableCell>
-                      <TableCell className="md:flex-1 flex-auto text-center">
-                        {item.userId?.name}
+                      <TableCell className="md:flex-1 flex-auto whitespace-nowrap text-center">
+                        {item.userId?.name?.split(" ")[0]}
                       </TableCell>
                       <TableCell className="md:flex-1 flex-auto text-center">
-                        {item.estimatedReturnTime
+                        {item?.startTime
                           ? timeConverter(item?.startTime as Date)
                           : "N/A"}
                       </TableCell>
@@ -240,10 +241,10 @@ const RentManagement = () => {
                           ? timeConverter(item?.returnTime)
                           : "N/A"}
                       </TableCell>
-                      <TableCell className="md:flex-1 flex-auto text-center">
-                        {totalCost === 0 ? "N/A" : totalCost}
+                      <TableCell className="md:flex-1 flex-auto whitespace-nowrap text-center">
+                        {item?.totalCost === 0 ? "N/A" : item?.totalCost}
                       </TableCell>
-                      <TableCell className="md:flex-1 flex-auto text-center">
+                      <TableCell className="md:flex-1 flex-auto whitespace-nowrap text-center">
                         {item.isPaid ? (
                           <Badge className="bg-green-500 hover:bg-green-500 text-white dark:text-slate-900">
                             Paid

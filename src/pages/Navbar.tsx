@@ -54,7 +54,7 @@ const Navbar = () => {
             </Link>
           </div>
 
-          <ul className="hidden md:flex items-center gap-10 text-card-foreground p-regular">
+          <ul className="hidden lg:flex items-center gap-10 text-card-foreground p-regular">
             <li className="text-primary ">
               <Link to={"/"}>Home</Link>
             </li>
@@ -66,10 +66,14 @@ const Navbar = () => {
               </li>
             )}
             <li>
-              <Link to={"/all-bike"}>All Bike</Link>
+              <Link className=" whitespace-nowrap" to={"/all-bike"}>
+                All Bike
+              </Link>
             </li>
             <li>
-              <Link to={"/about-us"}>About Us</Link>
+              <Link className=" whitespace-nowrap" to={"/about-us"}>
+                About Us
+              </Link>
             </li>
             <li>
               {token ? (
@@ -94,7 +98,7 @@ const Navbar = () => {
           </ul>
 
           <div className="flex items-center">
-            <div className="flex md:hidden p-regular mr-2 mt-6 items-center gap-2">
+            <div className="flex lg:hidden p-regular mr-2 mt-6 items-center gap-2">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="icon">
@@ -106,20 +110,20 @@ const Navbar = () => {
                   <DropdownMenuItem>
                     <ModeToggle />
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem className="dark:border-b-slate-800 border-b-indigo-200  border-b-[1px]">
                     <Link to={"/"}>Home</Link>
                   </DropdownMenuItem>
                   {["user", "superAdmin", "admin"].includes(role) && (
-                    <DropdownMenuItem>
+                    <DropdownMenuItem className="dark:border-b-slate-800 border-b-indigo-200  border-b-[1px]">
                       <Link to={`/${(user as TUser)?.role}/dashboard`}>
                         Dashboard
                       </Link>
                     </DropdownMenuItem>
                   )}
-                  <DropdownMenuItem>
+                  <DropdownMenuItem className="dark:border-b-slate-800 border-b-indigo-200  border-b-[1px]">
                     <Link to={"/all-bike"}>All Bike</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem className="dark:border-b-slate-800 border-b-indigo-200  border-b-[1px]">
                     <Link to={"/about-us"}>About Us</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
