@@ -21,10 +21,12 @@ import {
   TCoupon,
 } from "@/redux/features/coupon/couponSlice";
 import { TBike } from "@/types/intex";
+import { couponLifeCheck } from "@/utils/couponLifeCheck";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import React, { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
+import { toast } from "sonner";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
@@ -133,7 +135,21 @@ const Payment = () => {
       couponCode: couponInput.inputValue,
       userId: couponCheck?.userId?._id,
     };
+
     const couponServerResponse = await getCouponData(data);
+
+    const couponIsExpired = couponLifeCheck(
+      couponServerResponse?.data?.data[0]?.createDate
+    );
+    if (couponIsExpired === false) {
+      await deleteCoupon(couponServerResponse?.data?.data[0]?._id);
+      setIsError("Coupon has been expired!");
+      toast.error("Coupon has been expired!", {
+        duration: 3000,
+        className: "bg-red-500 text-white border-red-400",
+      });
+      return;
+    }
     if (couponServerResponse?.data?.success === true) {
       const discount = couponServerResponse?.data?.data[0].discount;
       const onePercentOfTotalCost =

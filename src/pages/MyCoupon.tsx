@@ -168,7 +168,7 @@ const MyCoupon = () => {
                   <TableHead className="md:flex-1 flex-auto text-end text-slate-50 pt-4 box-border">
                     Created
                   </TableHead>
-                  <TableHead className="md:flex-1 flex-auto text-end text-slate-50 pt-4 box-border">
+                  <TableHead className="md:flex-1 flex-auto text-end text-slate-50 pt-4 box-border whitespace-nowrap">
                     {"Expire in (hours)"}
                   </TableHead>
                   <TableHead className="md:flex-1 flex-auto text-center text-slate-50 pt-4 box-border">

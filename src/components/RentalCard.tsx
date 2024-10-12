@@ -20,6 +20,7 @@ import { useCreateTestimonialMutation } from "@/redux/features/testimonial/testi
 import { timeConverter } from "@/utils/timeConverter";
 import { MutableRefObject, useState } from "react";
 
+import { convertToDate, formatTime } from "@/utils/convertToDate";
 import { isReturnTimeValid } from "@/utils/isReturnTimeValid";
 import { CiStar } from "react-icons/ci";
 import { FaStar } from "react-icons/fa";
@@ -57,8 +58,10 @@ const RentalCard = ({
   const [bikeRating, setBikeRating] = useState(0);
   const [feedback, setFeedback] = useState("");
   const [isReviewed, setIsReviewed] = useState(false);
-  const [selectedReturnTime, setSelectedReturnTime] = useState<null | string>(
-    null
+  const currentDateTime = formatTime(new Date());
+  const initialReturnTime = convertToDate(currentDateTime).toISOString();
+  const [selectedReturnTime, setSelectedReturnTime] = useState<string | null>(
+    initialReturnTime
   );
   const navigate = useNavigate();
   const user = useAppSelector(currentUser);
