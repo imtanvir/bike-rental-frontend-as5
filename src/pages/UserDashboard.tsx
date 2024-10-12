@@ -35,7 +35,7 @@ export default function UserProfileDashboard() {
         <Menu className="h-5 w-5 rotate-0 scale-100" />
       </Button>
       <div
-        className={` bg-slate-950 lg:w-64 w-30% p-6 space-y-6 lg:relative absolute z-30 transition-transform duration-500 ease-in-out  shadow  h-full transform ${
+        className={` dark:bg-slate-950 bg-indigo-900 lg:w-64 w-30% p-6 space-y-6 lg:relative absolute z-30 transition-transform duration-500 ease-in-out  shadow  h-full transform ${
           sidebarOpen
             ? "translate-x-0 "
             : "translate-x-[-100%] lg:translate-x-0"

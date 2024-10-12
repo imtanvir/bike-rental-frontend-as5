@@ -11,11 +11,7 @@ type TFromCustom = {
   children: ReactNode;
 };
 const FormCustom = ({ onSubmit, children }: TFromCustom) => {
-  const payload = { email: "linux@example.com", password: "password123" };
-
-  const methods = useForm({
-    defaultValues: payload,
-  });
+  const methods = useForm();
   return (
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(onSubmit)}>{children}</form>

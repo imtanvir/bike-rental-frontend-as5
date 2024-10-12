@@ -1,4 +1,8 @@
-# Bike Rental Service Website
+# 🏍Bike Rental Service Web Application 🏍
+
+- **Live Site:**
+  - RidePro Bike Rental Service Live: https://bike-rental-frontend-as5-gx.vercel.app/
+  - RidePro Bike Rental Backend Api Live: https://bike-rental-frontend-as5-gx.vercel.app/
 
 ## Overview
 
@@ -42,6 +46,9 @@ This project is a fully functional Bike Rental Service platform that allows user
 - **Rental Management:**
   - Booking process allows users to rent bikes with a payment system.
   - My Rentals page with tabs for Paid and Unpaid rentals. Users can pay for rentals and see the status.
+- **Coupon Management:**
+  - Here user can view their coupon.
+  - User can take a coupon from the coupon wheel of home page.
 
 #### Admin Pages (Protected Routes)
 
@@ -80,7 +87,7 @@ This project is a fully functional Bike Rental Service platform that allows user
 - **Coupon Functionality:**
 
   - A gamified "spin-the-wheel" feature for winning discounts.
-  - Users can apply discount codes during checkout.
+  - Users can apply discount codes during checkout. Log in required!
 
 - **Dark Mode:**
   - Toggle between light and dark mode using a theme switcher.
@@ -91,18 +98,29 @@ This project is a fully functional Bike Rental Service platform that allows user
 
 - **Frontend:**
 
-  - React.js with Tailwind CSS for styling.
-  - Redux for state management.
+  - React.js with Tailwind CSS, Shadcn and raw css coding for styling.
+  - React Redux, Persist for state management.
 
 - **Backend:**
+
   - Node.js with Express.js.
   - MongoDB for the database.
+
+- **Deployment & Hosting:**
+  - Vercel for deploying backend and frontend live.
+  - Image hosting and Image CRUD for the full site is used Cloudinary.
 
 ---
 
 ### How to Run
 
-1. Clone the repository:
+1. Clone repository and run:
+
    ```bash
    git clone https://github.com/yourusername/bike-rental-service.git
+   cd ./folder_path/
+   npm run install
+   // set all ENV variable and backend URL, then follow the command
+
+   npm run dev
    ```
