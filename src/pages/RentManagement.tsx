@@ -308,7 +308,7 @@ const RentManagement = () => {
             </AlertDialogCancel>
           </div>
           <AlertDialogTitle>
-            <span className="text-2xl p-bold">Rant Paid!</span>
+            <span className="text-2xl p-bold">Rent Paid!</span>
             <span className="text-base block poppins-regular pb-4">
               The rent has been successfully paid as the total cost less than
               advance payment.
