@@ -110,6 +110,9 @@ const BikeManagement = () => {
       (filters.brand === "all" || bike.brand === filters.brand) &&
       (filters.model === "all" || bike.model === filters.model)
   );
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <section className="container mx-auto">
       {isEditing ? (

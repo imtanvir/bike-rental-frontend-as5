@@ -38,6 +38,9 @@ const BikeDetails = () => {
   const [loading, setLoading] = useState(false);
   const user = useAppSelector(currentUser);
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  useEffect(() => {
     setLoading(true);
     const res = async () => {
       const response = await bikeData(id);

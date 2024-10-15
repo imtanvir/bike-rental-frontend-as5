@@ -5,7 +5,11 @@ import CustomerTestimonials from "@/components/CustomerTestimonials";
 import FeaturedBikes from "@/components/FeaturedBikes";
 import WhyChooseUs from "@/components/WhyChooseUs";
 import "../pages/Home.css";
+import { useEffect } from "react";
 const Home = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <>
       <Banner />

@@ -55,6 +55,9 @@ const Payment = () => {
   const [couponInput, setCouponInput] = useState<{ inputValue: string }>({
     inputValue: "",
   });
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     const c = allCoupons?.find(

@@ -6,14 +6,16 @@ import { useAppSelector } from "@/hooks/hooks";
 import { currentUser } from "@/redux/features/auth/authSlice";
 import { TUser } from "@/redux/features/profile/profileSlice";
 import { Menu } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa6";
 import { Outlet } from "react-router-dom";
 import "./UserDashboard.css";
 
 export default function UserProfileDashboard() {
   const user = useAppSelector(currentUser);
-  // const { data } = useUserProfileQuery(undefined);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 

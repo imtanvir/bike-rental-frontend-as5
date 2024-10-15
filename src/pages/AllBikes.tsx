@@ -17,7 +17,9 @@ const AllBikes = () => {
   const dispatch = useAppDispatch();
   const { data, refetch } = useGetAllBikesQuery(undefined);
   const allBikes = useAppSelector(bikeCurrentBikes);
-
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   useEffect(() => {
     if (data?.data) {
       dispatch(setBikes({ data: data?.data }));

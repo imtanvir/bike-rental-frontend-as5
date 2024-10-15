@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { useSignUpMutation } from "@/redux/features/auth/authAPi";
 import { TError, TErrorResponse } from "@/types/intex";
 import { formFieldValidation } from "@/utils/formFiledValidation";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -29,6 +29,9 @@ const SignUp = () => {
     address: "",
     image: null,
   });
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const [selectUserImg, setSelectUserImg] = useState<{ image: File[] | null }>({
     image: null,
   });

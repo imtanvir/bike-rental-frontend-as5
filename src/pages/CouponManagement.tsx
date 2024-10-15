@@ -57,6 +57,9 @@ const CouponManagement = () => {
   const [selectedCoupon, setSelectedCoupon] = useState<TCoupon | null>(null);
   const [newCoupon, setNewCoupon] = useState<TCoupon | null>(null);
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  useEffect(() => {
     if (data?.data) {
       dispatch(setCoupons({ data: data?.data }));
     }

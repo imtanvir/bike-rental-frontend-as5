@@ -14,6 +14,7 @@ import { setUser } from "@/redux/features/auth/authSlice";
 import { TUser } from "@/redux/features/profile/profileSlice";
 import { TError } from "@/types/intex";
 import { verifyToken } from "@/utils/verifyToken";
+import { useEffect } from "react";
 import { FieldValues } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -54,6 +55,9 @@ const Login = () => {
       }
     }
   };
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <section className="md:py-32 flex items-center  md:h-auto h-[70vh] py-16 dark:bg-gradient-to-b dark:from-background dark:to-muted bg-slate-50">
       <Card className="mx-auto max-w-sm md:mt-24 shadow-lg">

@@ -11,9 +11,13 @@ import {
   Phone,
   Users,
 } from "lucide-react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const AboutUs = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const teamMembers = [
     {
       name: "Sarah Pedal",

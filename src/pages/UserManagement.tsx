@@ -67,7 +67,9 @@ const UserManagement = () => {
       dispatch(setAllUsers({ data: data?.data }));
     }
   }, [data, dispatch]);
-
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   useEffect(() => {
     refetch();
   }, [refetch]);

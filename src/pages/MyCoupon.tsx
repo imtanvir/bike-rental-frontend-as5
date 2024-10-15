@@ -56,6 +56,9 @@ const MyCoupon = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const user = useAppSelector(currentUser);
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  useEffect(() => {
     if (data?.data) {
       dispatch(setCoupons({ data: data?.data }));
     }

@@ -48,6 +48,9 @@ const RentManagement = () => {
   const [totalCost, setTotalCost] = useState(0);
   const [getMoneyBack, setGetMoneyBack] = useState(0);
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  useEffect(() => {
     if (data?.data) {
       dispatch(setRentals({ data: data?.data }));
     }
